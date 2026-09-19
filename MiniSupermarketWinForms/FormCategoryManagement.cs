@@ -1,4 +1,11 @@
-﻿using System.Net.Http.Json;
+﻿using MiniSupermarket.WinForms;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MiniSupermarketWinForms
 {
@@ -27,6 +34,13 @@ namespace MiniSupermarketWinForms
             this.Load += FormCategoryManagement_Load;
         }
 
+        // Cập nhật Header đính kèm Bearer Token từ SessionManager
+        private void AttachBearerToken()
+        {
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", SessionManager.JwtToken);
+        }
+
         // Khi mở Form
         private async void FormCategoryManagement_Load(object sender, EventArgs e)
         {
@@ -38,6 +52,9 @@ namespace MiniSupermarketWinForms
         {
             try
             {
+                // Đính kèm Token xác thực trước khi gọi API
+                AttachBearerToken();
+
                 var categories =
                     await _client.GetFromJsonAsync<List<CategoryDto>>("categories");
 
@@ -88,6 +105,7 @@ namespace MiniSupermarketWinForms
                 Description = txtDescription.Text
             };
 
+            AttachBearerToken();
             var response =
                 await _client.PostAsJsonAsync("categories", newCat);
 
@@ -129,6 +147,7 @@ namespace MiniSupermarketWinForms
                 Description = txtDescription.Text
             };
 
+            AttachBearerToken();
             var response =
                 await _client.PutAsJsonAsync(
                     $"categories/{id}",
@@ -166,6 +185,7 @@ namespace MiniSupermarketWinForms
 
             if (confirm == DialogResult.Yes)
             {
+                AttachBearerToken();
                 var response =
                     await _client.DeleteAsync($"categories/{id}");
 
@@ -196,6 +216,7 @@ namespace MiniSupermarketWinForms
 
             try
             {
+                AttachBearerToken();
                 var result =
                     await _client.GetFromJsonAsync<List<CategoryDto>>(
                         $"categories/search?keyword={keyword}");
