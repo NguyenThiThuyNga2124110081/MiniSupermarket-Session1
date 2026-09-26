@@ -34,6 +34,8 @@ Thiết lập Visual Studio khởi chạy đồng thời cả Backend API và Wi
 Thực hiện Thêm / Sửa / Xóa danh mục từ màn hình FormCategoryManagement.
 
 Đối soát CSDL: Sử dụng SQL Server Object Explorer để kiểm tra dữ liệu trong bảng dbo.Categories [Data]. Dữ liệu được lưu trữ nguyên vẹn trên đĩa cứng ngay cả khi tắt và khởi chạy lại toàn bộ ứng dụng.
+
+
 3. TÊN TÁC GIẢ
 Họ và tên: Nguyễn Thị Thúy Nga
 MSSV: 2124110081
