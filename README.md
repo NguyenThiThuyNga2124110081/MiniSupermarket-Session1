@@ -1,85 +1,172 @@
-🛒 HỆ THỐNG QUẢN LÝ SIÊU THỊ MINI (MINISUPERMARKET SYSTEM)
+\# BUỔI 2: BẢO MẬT \& PHÂN QUYỀN JWT CHO WEB API
 
 
 
-Môn học: Lập trình Ứng dụng .NET Core (Mã môn: 229162)
+\## Thông tin sinh viên
+
+\- \*\*Họ và tên:\*\* Nguyễn Thị Thúy Nga
+
+\- \*\*MSSV:\*\* 2124110081
+
+\- \*\*Lớp:\*\* CCQ2411C
 
 
 
-Buổi thực hành: Buổi 1 - Xây dựng Web API quản lý danh mục và kết nối WinForms Client (CRUD)
+\---
 
 
 
-🏗️ 1. Mô hình Kiến trúc Hệ thống (Client - Server)
+\## 1. Mục tiêu
+
+Buổi 2 nâng cấp dự án MiniSupermarket từ chức năng CRUD của Buổi 1 lên hệ thống có \*\*đăng nhập, xác thực và phân quyền bằng JWT\*\*.
 
 
 
-Dự án được xây dựng theo mô hình phân tầng hiện đại, tách biệt hoàn toàn giữa Backend và Frontend:
+\---
 
 
 
-MiniSupermarket.API (Backend): Dự án ASP.NET Core Web API chịu trách nhiệm xử lý logic nghiệp vụ, quản lý dữ liệu và cung cấp các RESTful API.
+\## 2. Nội dung đã bổ sung
 
 
 
-MiniSupermarketWinForms (Frontend Client): Ứng dụng Windows Forms đóng vai trò là máy trạm, sử dụng HttpClient để gọi dữ liệu từ API và hiển thị lên DataGridView.
+\### Backend - MiniSupermarket.API
+
+\- Cài đặt package hỗ trợ JWT Authentication.
+
+\- Tạo `AuthController` để xử lý đăng nhập và cấp JWT Token.
+
+\- Cấu hình JWT Authentication trong `Program.cs`.
+
+\- Sử dụng `\[Authorize]` để bảo vệ API.
+
+\- Sử dụng `\[Authorize(Roles = "...")]` để phân quyền Admin và Cashier.
+
+\- Kiểm tra API khi chưa đăng nhập và khi đăng nhập bằng các quyền khác nhau.
 
 
 
-🛠️ 2. Công nghệ Sử dụng
+\### WinForms - MiniSupermarketWinForms
+
+\- Tạo `FormLogin` để đăng nhập.
+
+\- Tạo `SessionManager` để lưu JWT Token và Role của người dùng.
+
+\- Cập nhật `ApiClientService` để gửi Bearer Token khi gọi API.
+
+\- Cập nhật `FormCategoryManagement` để gọi API có xác thực.
+
+\- Thay đổi màn hình khởi chạy thành `FormLogin`.
 
 
 
-Ngôn ngữ: C# (.NET 8.0)
+\---
 
 
 
-Backend: ASP.NET Core Web API, Controllers, In-Memory Data, LINQ
+\## 3. Tài khoản kiểm thử
 
 
 
-Frontend: Windows Forms (.NET 8.0), System.Net.Http.Json
+| Tài khoản | Mật khẩu | Quyền |
+
+| :--- | :--- | :--- |
+
+| `admin` | `123` | Admin |
+
+| `cashier` | `123` | Cashier |
 
 
 
-Công cụ kiểm thử: Swagger UI
+\---
 
 
 
-📂 3. Cấu trúc Solution
+\## 4. Kết quả
+
+Sau Buổi 2, hệ thống có thêm:
+
+\- Đăng nhập bằng tài khoản.
+
+\- Cấp và lưu JWT Token.
+
+\- Xác thực người dùng bằng Bearer Token.
+
+\- Phân quyền Admin và Cashier.
+
+\- Bảo vệ các API bằng `\[Authorize]`.
+
+\- WinForms có màn hình đăng nhập và gửi Token khi gọi API.
 
 
 
-MiniSupermarket.API/
-
-│
-
-├── MiniSupermarket.API/
-
-│   ├── Controllers/
-
-│   ├── Models/
-
-│   └── Program.cs
-
-│
-
-├── MiniSupermarketWinForms/
-
-│   └── FormCategoryManagement/
-
-│
-
-├── FormCategoryManagement/
-
-├── packages/
-
-├── MiniSupermarket.API.sln
-
-└── README.md
+\---
 
 
-## 4. Thông tin Tác giả
-* **Họ tên sinh viên:** Nguyễn Thị Thúy Nga
-* **Mã sinh viên:** 2124110081
-* **Lớp học phần:** CCQ2411C
+
+\## 5. So với Buổi 1
+
+\*\*Buổi 1:\*\* Tập trung xây dựng chức năng CRUD Nhóm hàng.
+
+
+
+\*\*Buổi 2:\*\* Bổ sung bảo mật cho hệ thống gồm:
+
+\- Đăng nhập.
+
+\- JWT Authentication.
+
+\- Authorization.
+
+\- Phân quyền Admin/Cashier.
+
+
+
+\---
+
+
+
+\## 6. Công nghệ sử dụng
+
+\- C#
+
+\- .NET 8.0
+
+\- ASP.NET Core Web API
+
+\- Windows Forms
+
+\- JWT Authentication
+
+\- Visual Studio 2022
+
+\- Git/GitHub
+
+\- Swagger
+
+
+
+\---
+
+
+
+\## 7. API kiểm tra
+
+
+
+Swagger:
+
+```text
+
+https://localhost:7099/swagger/index.html
+
+
+
+\## 8. GitHub
+
+Repository:
+
+
+
+https://github.com/NguyenThiThuyNga2124110081/MiniSupermarket-Session1
+
