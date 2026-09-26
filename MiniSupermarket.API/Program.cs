@@ -1,14 +1,21 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MiniSupermarket.API.Data;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Lấy secret key từ appsettings.json
+// 1. Lấy chuỗi kết nối và Đăng ký DbContext (EF Core SQL Server)
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<SupermarketDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
+// 2. Lấy secret key từ appsettings.json
 var jwtSecret = builder.Configuration["JwtSettings:Secret"] ?? "SupermarketSecretKeyDoAnMonHoc2026SecureString!!";
 
-// 2. Cấu hình JwtBearer Authentication
+// 3. Cấu hình JwtBearer Authentication
 builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -26,12 +33,11 @@ builder.Services.AddAuthentication(options => {
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// 3. Cấu hình Swagger để hiển thị nút Authorize (Ổ khóa) nhập JWT Token
+// 4. Cấu hình Swagger
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "MiniSupermarket API", Version = "v1" });
 
-    // Thêm định nghĩa bảo mật Bearer Token
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -58,8 +64,10 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+// Chỉ gọi duy nhất 1 lần builder.Build() sau khi đã đăng ký hết Services
 var app = builder.Build();
 
+// Cấu hình HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -68,7 +76,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Lưu ý: app.UseAuthentication() PHẢI đứng trước app.UseAuthorization()
 app.UseAuthentication();
 app.UseAuthorization();
 
