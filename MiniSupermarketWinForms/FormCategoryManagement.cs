@@ -41,9 +41,21 @@ namespace MiniSupermarketWinForms
                 new AuthenticationHeaderValue("Bearer", SessionManager.JwtToken);
         }
 
-        // Khi mở Form
+        // Khi mở Form: Kiểm tra Role để phân quyền giao diện UI
         private async void FormCategoryManagement_Load(object sender, EventArgs e)
         {
+            // Nếu không phải Admin (ví dụ: Cashier) thì ẩn/khóa các chức năng CUD
+            if (!string.Equals(SessionManager.CurrentRole, "Admin", StringComparison.OrdinalIgnoreCase))
+            {
+                btnAdd.Enabled = false;
+                btnUpdate.Enabled = false;
+                btnDelete.Enabled = false;
+
+                // Mẹo: Khóa luôn ô nhập liệu để Cashier không thao tác nhầm
+                txtCategoryName.ReadOnly = true;
+                txtDescription.ReadOnly = true;
+            }
+
             await LoadDataAsync();
         }
 
@@ -52,7 +64,6 @@ namespace MiniSupermarketWinForms
         {
             try
             {
-                // Đính kèm Token xác thực trước khi gọi API
                 AttachBearerToken();
 
                 var categories =
@@ -112,14 +123,12 @@ namespace MiniSupermarketWinForms
             if (response.IsSuccessStatusCode)
             {
                 MessageBox.Show("Thêm mới thành công!");
-
                 await LoadDataAsync();
                 ClearInputs();
             }
             else
             {
                 string error = await response.Content.ReadAsStringAsync();
-
                 MessageBox.Show(
                     "Thêm mới thất bại!\n\nMã lỗi: " + response.StatusCode +
                     "\n\nChi tiết:\n" + error,
@@ -156,13 +165,18 @@ namespace MiniSupermarketWinForms
             if (response.IsSuccessStatusCode)
             {
                 MessageBox.Show("Cập nhật thành công!");
-
                 await LoadDataAsync();
                 ClearInputs();
             }
             else
             {
-                MessageBox.Show("Cập nhật thất bại!");
+                string error = await response.Content.ReadAsStringAsync();
+                MessageBox.Show(
+                    "Cập nhật thất bại!\n\nMã lỗi: " + response.StatusCode +
+                    "\n\nChi tiết:\n" + error,
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
@@ -192,13 +206,18 @@ namespace MiniSupermarketWinForms
                 if (response.IsSuccessStatusCode)
                 {
                     MessageBox.Show("Xóa thành công!");
-
                     await LoadDataAsync();
                     ClearInputs();
                 }
                 else
                 {
-                    MessageBox.Show("Xóa thất bại!");
+                    string error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show(
+                        "Xóa thất bại!\n\nMã lỗi: " + response.StatusCode +
+                        "\n\nChi tiết:\n" + error,
+                        "Lỗi",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
                 }
             }
         }
