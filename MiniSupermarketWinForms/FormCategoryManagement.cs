@@ -11,6 +11,7 @@ namespace MiniSupermarketWinForms
 {
     public partial class FormCategoryManagement : Form
     {
+        // Hãy kiểm tra đúng Port API của bạn (thay 7099 hoặc 7181 theo đúng Backend)
         private static readonly HttpClient _client = new HttpClient
         {
             BaseAddress = new Uri("https://localhost:7099/api/")
@@ -20,25 +21,33 @@ namespace MiniSupermarketWinForms
         {
             InitializeComponent();
 
-            // Gắn sự kiện cho các nút
+            // Gắn sự kiện cho các nút CRUD
             btnAdd.Click += btnAdd_Click;
             btnUpdate.Click += btnUpdate_Click;
             btnDelete.Click += btnDelete_Click;
             btnSearch.Click += btnSearch_Click;
             btnLoad.Click += btnLoad_Click;
 
-            // Khi click vào dòng trong bảng
-            dgvCategories.CellClick += dgvCategories_CellClick;
+            // Gắn sự kiện điều hướng chuyển Form
+            if (btnCustomerManagement != null)
+                btnCustomerManagement.Click += btnCustomerManagement_Click;
 
-            // Khi Form mở
+            if (btnProductManagement != null)
+                btnProductManagement.Click += btnProductManagement_Click;
+
+            // Sự kiện bảng & Form
+            dgvCategories.CellClick += dgvCategories_CellClick;
             this.Load += FormCategoryManagement_Load;
         }
 
         // Cập nhật Header đính kèm Bearer Token từ SessionManager
         private void AttachBearerToken()
         {
-            _client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", SessionManager.JwtToken);
+            if (!string.IsNullOrEmpty(SessionManager.JwtToken))
+            {
+                _client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", SessionManager.JwtToken);
+            }
         }
 
         // Khi mở Form: Kiểm tra Role để phân quyền giao diện UI
@@ -51,7 +60,6 @@ namespace MiniSupermarketWinForms
                 btnUpdate.Enabled = false;
                 btnDelete.Enabled = false;
 
-                // Mẹo: Khóa luôn ô nhập liệu để Cashier không thao tác nhầm
                 txtCategoryName.ReadOnly = true;
                 txtDescription.ReadOnly = true;
             }
@@ -70,6 +78,16 @@ namespace MiniSupermarketWinForms
                     await _client.GetFromJsonAsync<List<CategoryDto>>("categories");
 
                 dgvCategories.DataSource = categories;
+
+                // Đổi tên tiêu đề các cột hiển thị cho đẹp
+                if (dgvCategories.Columns["CategoryId"] != null)
+                    dgvCategories.Columns["CategoryId"].HeaderText = "Mã ID";
+
+                if (dgvCategories.Columns["CategoryName"] != null)
+                    dgvCategories.Columns["CategoryName"].HeaderText = "Tên Nhóm hàng";
+
+                if (dgvCategories.Columns["Description"] != null)
+                    dgvCategories.Columns["Description"].HeaderText = "Mô tả";
             }
             catch (Exception ex)
             {
@@ -84,32 +102,32 @@ namespace MiniSupermarketWinForms
         // Tải lại
         private async void btnLoad_Click(object sender, EventArgs e)
         {
+            ClearInputs();
             await LoadDataAsync();
         }
 
         // Click vào dòng trong bảng
-        private void dgvCategories_CellClick(
-            object sender,
-            DataGridViewCellEventArgs e)
+        private void dgvCategories_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgvCategories.Rows[e.RowIndex];
 
-                txtId.Text =
-                    row.Cells["CategoryId"].Value?.ToString() ?? "";
-
-                txtCategoryName.Text =
-                    row.Cells["CategoryName"].Value?.ToString() ?? "";
-
-                txtDescription.Text =
-                    row.Cells["Description"].Value?.ToString() ?? "";
+                txtId.Text = row.Cells["CategoryId"]?.Value?.ToString() ?? "";
+                txtCategoryName.Text = row.Cells["CategoryName"]?.Value?.ToString() ?? "";
+                txtDescription.Text = row.Cells["Description"]?.Value?.ToString() ?? "";
             }
         }
 
         // THÊM
         private async void btnAdd_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtCategoryName.Text))
+            {
+                MessageBox.Show("Vui lòng nhập tên nhóm hàng!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var newCat = new
             {
                 CategoryName = txtCategoryName.Text,
@@ -117,12 +135,11 @@ namespace MiniSupermarketWinForms
             };
 
             AttachBearerToken();
-            var response =
-                await _client.PostAsJsonAsync("categories", newCat);
+            var response = await _client.PostAsJsonAsync("categories", newCat);
 
             if (response.IsSuccessStatusCode)
             {
-                MessageBox.Show("Thêm mới thành công!");
+                MessageBox.Show("Thêm mới thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await LoadDataAsync();
                 ClearInputs();
             }
@@ -143,7 +160,7 @@ namespace MiniSupermarketWinForms
         {
             if (string.IsNullOrEmpty(txtId.Text))
             {
-                MessageBox.Show("Vui lòng chọn nhóm hàng cần sửa!");
+                MessageBox.Show("Vui lòng chọn nhóm hàng cần sửa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -157,14 +174,11 @@ namespace MiniSupermarketWinForms
             };
 
             AttachBearerToken();
-            var response =
-                await _client.PutAsJsonAsync(
-                    $"categories/{id}",
-                    updateCat);
+            var response = await _client.PutAsJsonAsync($"categories/{id}", updateCat);
 
             if (response.IsSuccessStatusCode)
             {
-                MessageBox.Show("Cập nhật thành công!");
+                MessageBox.Show("Cập nhật thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await LoadDataAsync();
                 ClearInputs();
             }
@@ -185,7 +199,7 @@ namespace MiniSupermarketWinForms
         {
             if (string.IsNullOrEmpty(txtId.Text))
             {
-                MessageBox.Show("Vui lòng chọn nhóm hàng cần xóa!");
+                MessageBox.Show("Vui lòng chọn nhóm hàng cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -200,12 +214,11 @@ namespace MiniSupermarketWinForms
             if (confirm == DialogResult.Yes)
             {
                 AttachBearerToken();
-                var response =
-                    await _client.DeleteAsync($"categories/{id}");
+                var response = await _client.DeleteAsync($"categories/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    MessageBox.Show("Xóa thành công!");
+                    MessageBox.Show("Xóa thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     await LoadDataAsync();
                     ClearInputs();
                 }
@@ -227,7 +240,7 @@ namespace MiniSupermarketWinForms
         {
             string keyword = txtKeyword.Text.Trim();
 
-            if (string.IsNullOrEmpty(keyword))
+            if (string.IsNullOrEmpty(keyword) || keyword == "Nhập từ khóa...")
             {
                 await LoadDataAsync();
                 return;
@@ -236,16 +249,28 @@ namespace MiniSupermarketWinForms
             try
             {
                 AttachBearerToken();
-                var result =
-                    await _client.GetFromJsonAsync<List<CategoryDto>>(
-                        $"categories/search?keyword={keyword}");
-
+                var result = await _client.GetFromJsonAsync<List<CategoryDto>>($"categories/search?keyword={keyword}");
                 dgvCategories.DataSource = result;
             }
             catch (Exception)
             {
-                MessageBox.Show("Không tìm thấy kết quả phù hợp!");
+                MessageBox.Show("Không tìm thấy kết quả phù hợp!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        // Chuyển sang Form Quản lý Khách hàng
+        private void btnCustomerManagement_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            FormCustomerManagement customerForm = new FormCustomerManagement();
+            customerForm.ShowDialog();
+            this.Show();
+        }
+
+        // Chuyển sang Form Quản lý Sản phẩm
+        private void btnProductManagement_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Đang mở giao diện Quản lý Sản phẩm!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // Xóa ô nhập
@@ -254,6 +279,7 @@ namespace MiniSupermarketWinForms
             txtId.Text = "";
             txtCategoryName.Text = "";
             txtDescription.Text = "";
+            txtKeyword.Text = "";
         }
     }
 
@@ -261,9 +287,7 @@ namespace MiniSupermarketWinForms
     public class CategoryDto
     {
         public int CategoryId { get; set; }
-
         public string CategoryName { get; set; } = string.Empty;
-
         public string? Description { get; set; }
     }
 }

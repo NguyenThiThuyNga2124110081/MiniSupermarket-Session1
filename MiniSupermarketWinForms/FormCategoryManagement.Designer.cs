@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
+            btnCustomerManagement = new Button();
+            btnProductManagement = new Button();
             btnLoad = new Button();
             btnSearch = new Button();
             txtKeyword = new TextBox();
@@ -52,6 +54,8 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnCustomerManagement);
+            groupBox1.Controls.Add(btnProductManagement);
             groupBox1.Controls.Add(btnLoad);
             groupBox1.Controls.Add(btnSearch);
             groupBox1.Controls.Add(txtKeyword);
@@ -61,6 +65,30 @@
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Tìm kiếm";
+            // 
+            // btnCustomerManagement
+            // 
+            btnCustomerManagement.BackColor = Color.FromArgb(70, 130, 180);
+            btnCustomerManagement.FlatStyle = FlatStyle.Flat;
+            btnCustomerManagement.ForeColor = Color.White;
+            btnCustomerManagement.Location = new Point(480, 25);
+            btnCustomerManagement.Name = "btnCustomerManagement";
+            btnCustomerManagement.Size = new Size(130, 28);
+            btnCustomerManagement.TabIndex = 3;
+            btnCustomerManagement.Text = "Quản lý Khách hàng";
+            btnCustomerManagement.UseVisualStyleBackColor = false;
+            // 
+            // btnProductManagement
+            // 
+            btnProductManagement.BackColor = Color.FromArgb(46, 139, 87);
+            btnProductManagement.FlatStyle = FlatStyle.Flat;
+            btnProductManagement.ForeColor = Color.White;
+            btnProductManagement.Location = new Point(620, 25);
+            btnProductManagement.Name = "btnProductManagement";
+            btnProductManagement.Size = new Size(130, 28);
+            btnProductManagement.TabIndex = 4;
+            btnProductManagement.Text = "Quản lý Sản phẩm";
+            btnProductManagement.UseVisualStyleBackColor = false;
             // 
             // btnLoad
             // 
@@ -86,7 +114,6 @@
             txtKeyword.Name = "txtKeyword";
             txtKeyword.Size = new Size(248, 23);
             txtKeyword.TabIndex = 0;
-            txtKeyword.Text = "Nhập từ khóa...";
             // 
             // groupBox2
             // 
@@ -100,10 +127,15 @@
             // 
             // dgvCategories
             // 
+            dgvCategories.AllowUserToAddRows = false;
+            dgvCategories.AllowUserToDeleteRows = false;
+            dgvCategories.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvCategories.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvCategories.Location = new Point(6, 22);
             dgvCategories.Name = "dgvCategories";
-            dgvCategories.Size = new Size(431, 272);
+            dgvCategories.ReadOnly = true;
+            dgvCategories.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvCategories.Size = new Size(446, 272);
             dgvCategories.TabIndex = 0;
             // 
             // groupBox3
@@ -117,51 +149,51 @@
             groupBox3.Controls.Add(label2);
             groupBox3.Controls.Add(txtId);
             groupBox3.Controls.Add(label1);
-            groupBox3.Location = new Point(475, 123);
+            groupBox3.Location = new Point(475, 114);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(304, 291);
+            groupBox3.Size = new Size(313, 300);
             groupBox3.TabIndex = 2;
             groupBox3.TabStop = false;
             groupBox3.Text = "Thông tin nhóm hàng";
             // 
             // btnDelete
             // 
-            btnDelete.Location = new Point(198, 169);
+            btnDelete.Location = new Point(210, 180);
             btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(75, 23);
+            btnDelete.Size = new Size(80, 30);
             btnDelete.TabIndex = 8;
             btnDelete.Text = "Xóa";
             btnDelete.UseVisualStyleBackColor = true;
             // 
             // btnUpdate
             // 
-            btnUpdate.Location = new Point(102, 165);
+            btnUpdate.Location = new Point(115, 180);
             btnUpdate.Name = "btnUpdate";
-            btnUpdate.Size = new Size(75, 23);
+            btnUpdate.Size = new Size(80, 30);
             btnUpdate.TabIndex = 7;
             btnUpdate.Text = "Cập nhật";
             btnUpdate.UseVisualStyleBackColor = true;
             // 
             // btnAdd
             // 
-            btnAdd.Location = new Point(21, 165);
+            btnAdd.Location = new Point(20, 180);
             btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(75, 23);
+            btnAdd.Size = new Size(80, 30);
             btnAdd.TabIndex = 6;
             btnAdd.Text = "Thêm mới";
             btnAdd.UseVisualStyleBackColor = true;
             // 
             // txtDescription
             // 
-            txtDescription.Location = new Point(19, 132);
+            txtDescription.Location = new Point(16, 132);
             txtDescription.Name = "txtDescription";
-            txtDescription.Size = new Size(279, 23);
+            txtDescription.Size = new Size(274, 23);
             txtDescription.TabIndex = 5;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(19, 114);
+            label3.Location = new Point(16, 114);
             label3.Name = "label3";
             label3.Size = new Size(38, 15);
             label3.TabIndex = 4;
@@ -169,15 +201,15 @@
             // 
             // txtCategoryName
             // 
-            txtCategoryName.Location = new Point(17, 85);
+            txtCategoryName.Location = new Point(16, 85);
             txtCategoryName.Name = "txtCategoryName";
-            txtCategoryName.Size = new Size(281, 23);
+            txtCategoryName.Size = new Size(274, 23);
             txtCategoryName.TabIndex = 3;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(15, 69);
+            label2.Location = new Point(16, 67);
             label2.Name = "label2";
             label2.Size = new Size(90, 15);
             label2.TabIndex = 2;
@@ -187,13 +219,14 @@
             // 
             txtId.Location = new Point(16, 38);
             txtId.Name = "txtId";
-            txtId.Size = new Size(288, 23);
+            txtId.ReadOnly = true;
+            txtId.Size = new Size(274, 23);
             txtId.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 21);
+            label1.Location = new Point(16, 20);
             label1.Name = "label1";
             label1.Size = new Size(38, 15);
             label1.TabIndex = 0;
@@ -203,12 +236,13 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(800, 430);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Name = "FormCategoryManagement";
-            Text = "FormCategoryManagement";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Quản lý Danh mục Nhóm hàng";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             groupBox2.ResumeLayout(false);
@@ -224,6 +258,8 @@
         private Button btnSearch;
         private TextBox txtKeyword;
         private Button btnLoad;
+        private Button btnCustomerManagement;
+        private Button btnProductManagement;
         private GroupBox groupBox2;
         private DataGridView dgvCategories;
         private GroupBox groupBox3;

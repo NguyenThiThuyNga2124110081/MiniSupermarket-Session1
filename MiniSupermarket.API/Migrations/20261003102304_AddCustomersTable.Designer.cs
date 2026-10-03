@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MiniSupermarket.API.Data;
 
@@ -10,9 +11,11 @@ using MiniSupermarket.API.Data;
 namespace MiniSupermarket.API.Migrations
 {
     [DbContext(typeof(SupermarketDbContext))]
-    partial class SupermarketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261003102304_AddCustomersTable")]
+    partial class AddCustomersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,114 +139,6 @@ namespace MiniSupermarket.API.Migrations
                             MembershipRank = "Chuẩn",
                             PhoneNumber = "0983344556",
                             RewardPoints = 10
-                        },
-                        new
-                        {
-                            CustomerId = 4,
-                            Address = "Cần Thơ",
-                            CustomerName = "Phạm Minh Đức",
-                            MembershipRank = "Bạch Kim",
-                            PhoneNumber = "0971234567",
-                            RewardPoints = 320
-                        },
-                        new
-                        {
-                            CustomerId = 5,
-                            Address = "Hải Phòng",
-                            CustomerName = "Hoàng Thu Thảo",
-                            MembershipRank = "Vàng",
-                            PhoneNumber = "0934567890",
-                            RewardPoints = 180
-                        },
-                        new
-                        {
-                            CustomerId = 6,
-                            Address = "Bình Dương",
-                            CustomerName = "Đỗ Quốc Anh",
-                            MembershipRank = "Chuẩn",
-                            PhoneNumber = "0945678901",
-                            RewardPoints = 25
-                        },
-                        new
-                        {
-                            CustomerId = 7,
-                            Address = "Đồng Nai",
-                            CustomerName = "Vũ Mỹ Linh",
-                            MembershipRank = "Bạc",
-                            PhoneNumber = "0967890123",
-                            RewardPoints = 75
-                        },
-                        new
-                        {
-                            CustomerId = 8,
-                            Address = "Quảng Ninh",
-                            CustomerName = "Bùi Tấn Phát",
-                            MembershipRank = "Vàng",
-                            PhoneNumber = "0923456789",
-                            RewardPoints = 210
-                        },
-                        new
-                        {
-                            CustomerId = 9,
-                            Address = "Huế",
-                            CustomerName = "Đặng Hồng Hạnh",
-                            MembershipRank = "Chuẩn",
-                            PhoneNumber = "0956789012",
-                            RewardPoints = 0
-                        },
-                        new
-                        {
-                            CustomerId = 10,
-                            Address = "Nha Trang",
-                            CustomerName = "Ngô Gia Bảo",
-                            MembershipRank = "Bạch Kim",
-                            PhoneNumber = "0987654321",
-                            RewardPoints = 500
-                        },
-                        new
-                        {
-                            CustomerId = 11,
-                            Address = "TP.HCM",
-                            CustomerName = "Dương Ngọc Trinh",
-                            MembershipRank = "Bạc",
-                            PhoneNumber = "0912345678",
-                            RewardPoints = 90
-                        },
-                        new
-                        {
-                            CustomerId = 12,
-                            Address = "Hà Nội",
-                            CustomerName = "Lý Khánh Vân",
-                            MembershipRank = "Vàng",
-                            PhoneNumber = "0938765432",
-                            RewardPoints = 160
-                        },
-                        new
-                        {
-                            CustomerId = 13,
-                            Address = "Vũng Tàu",
-                            CustomerName = "Mai Xuân Trường",
-                            MembershipRank = "Chuẩn",
-                            PhoneNumber = "0941239876",
-                            RewardPoints = 15
-                        },
-                        new
-                        {
-                            CustomerId = 14,
-                            Address = "Lâm Đồng",
-                            CustomerName = "Trịnh Kim Ngân",
-                            MembershipRank = "Bạc",
-                            PhoneNumber = "0965432109",
-                            RewardPoints = 85
-                        },
-                        new
-                        {
-                            CustomerId = 15,
-                            Address = "Kiên Giang",
-                            CustomerName = "Đoàn Hải Nam",
-                            MembershipRank = "Bạch Kim",
-                            PhoneNumber = "0978901234",
-                            RewardPoints = 410
                         });
                 });
 
