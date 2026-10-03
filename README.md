@@ -1,172 +1,42 @@
-\# BUỔI 2: BẢO MẬT \& PHÂN QUYỀN JWT CHO WEB API
+ BUỔI 3: KẾT NỐI CƠ SỞ DỮ LIỆU LOCALDB, EF CORE MIGRATION & KIỂM THỬ BỀN VỮNG DỮ LIỆU
 
+1. MỤC TIÊU BÀI THỰC HÀNH
+- Chuyển đổi Cơ sở dữ liệu từ bộ nhớ tạm sang **SQL Server LocalDB**.
+- Thực thi Entity Framework Core Migration để khởi tạo cấu trúc CSDL và nạp dữ liệu mẫu (Seeding Data).
+- Xây dựng Backend API (`CategoriesController`) tương tác trực tiếp với SQL Server LocalDB.
+- Kiểm thử tính lưu trữ bền vững (Data Persistence) trên giao diện Client WinForms (`MiniSupermarketWinForms`).
 
+---
 
-\## Thông tin sinh viên
+2. KẾT QUẢ ĐẠT ĐƯỢC
 
-\- \*\*Họ và tên:\*\* Nguyễn Thị Thúy Nga
+2.1. Cấu hình Chuỗi Kết Nối (Connection String)
+Cập nhật file `appsettings.json` kết nối tới SQL Server LocalDB:
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=MiniSupermarketDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
+  }
+}
+2.2. Entity Framework Core Migration
+Thực thi lệnh Add-Migration tạo mã khởi tạo các bảng dbo.Categories và dbo.Products.
 
-\- \*\*MSSV:\*\* 2124110081
+Chạy lệnh Update-Database cập nhật cấu trúc bảng và 5 dòng dữ liệu danh mục mặc định xuống đĩa cứng LocalDB.
 
-\- \*\*Lớp:\*\* CCQ2411C
+2.3. Kiểm thử API trên Swagger UI
+Thực thi các thao tác CRUD bất đồng bộ (async/await) kết nối tới CSDL.
 
+Gọi API POST /api/Categories tạo mới danh mục thành công (Mã HTTP 201 Created, tự động cấp CategoryId = 6).
 
+2.4. Kiểm thử Bền vững Dữ liệu trên WinForms Client
+Thiết lập Visual Studio khởi chạy đồng thời cả Backend API và WinForms Client (Multiple Startup Projects).
 
-\---
+Thực hiện Thêm / Sửa / Xóa danh mục từ màn hình FormCategoryManagement.
 
+Đối soát CSDL: Sử dụng SQL Server Object Explorer để kiểm tra dữ liệu trong bảng dbo.Categories [Data]. Dữ liệu được lưu trữ nguyên vẹn trên đĩa cứng ngay cả khi tắt và khởi chạy lại toàn bộ ứng dụng.
 
 
-\## 1. Mục tiêu
-
-Buổi 2 nâng cấp dự án MiniSupermarket từ chức năng CRUD của Buổi 1 lên hệ thống có \*\*đăng nhập, xác thực và phân quyền bằng JWT\*\*.
-
-
-
-\---
-
-
-
-\## 2. Nội dung đã bổ sung
-
-
-
-\### Backend - MiniSupermarket.API
-
-\- Cài đặt package hỗ trợ JWT Authentication.
-
-\- Tạo `AuthController` để xử lý đăng nhập và cấp JWT Token.
-
-\- Cấu hình JWT Authentication trong `Program.cs`.
-
-\- Sử dụng `\[Authorize]` để bảo vệ API.
-
-\- Sử dụng `\[Authorize(Roles = "...")]` để phân quyền Admin và Cashier.
-
-\- Kiểm tra API khi chưa đăng nhập và khi đăng nhập bằng các quyền khác nhau.
-
-
-
-\### WinForms - MiniSupermarketWinForms
-
-\- Tạo `FormLogin` để đăng nhập.
-
-\- Tạo `SessionManager` để lưu JWT Token và Role của người dùng.
-
-\- Cập nhật `ApiClientService` để gửi Bearer Token khi gọi API.
-
-\- Cập nhật `FormCategoryManagement` để gọi API có xác thực.
-
-\- Thay đổi màn hình khởi chạy thành `FormLogin`.
-
-
-
-\---
-
-
-
-\## 3. Tài khoản kiểm thử
-
-
-
-| Tài khoản | Mật khẩu | Quyền |
-
-| :--- | :--- | :--- |
-
-| `admin` | `123` | Admin |
-
-| `cashier` | `123` | Cashier |
-
-
-
-\---
-
-
-
-\## 4. Kết quả
-
-Sau Buổi 2, hệ thống có thêm:
-
-\- Đăng nhập bằng tài khoản.
-
-\- Cấp và lưu JWT Token.
-
-\- Xác thực người dùng bằng Bearer Token.
-
-\- Phân quyền Admin và Cashier.
-
-\- Bảo vệ các API bằng `\[Authorize]`.
-
-\- WinForms có màn hình đăng nhập và gửi Token khi gọi API.
-
-
-
-\---
-
-
-
-\## 5. So với Buổi 1
-
-\*\*Buổi 1:\*\* Tập trung xây dựng chức năng CRUD Nhóm hàng.
-
-
-
-\*\*Buổi 2:\*\* Bổ sung bảo mật cho hệ thống gồm:
-
-\- Đăng nhập.
-
-\- JWT Authentication.
-
-\- Authorization.
-
-\- Phân quyền Admin/Cashier.
-
-
-
-\---
-
-
-
-\## 6. Công nghệ sử dụng
-
-\- C#
-
-\- .NET 8.0
-
-\- ASP.NET Core Web API
-
-\- Windows Forms
-
-\- JWT Authentication
-
-\- Visual Studio 2022
-
-\- Git/GitHub
-
-\- Swagger
-
-
-
-\---
-
-
-
-\## 7. API kiểm tra
-
-
-
-Swagger:
-
-```text
-
-https://localhost:7099/swagger/index.html
-
-
-
-\## 8. GitHub
-
-Repository:
-
-
-
-https://github.com/NguyenThiThuyNga2124110081/MiniSupermarket-Session1
-
+3. TÊN TÁC GIẢ
+Họ và tên: Nguyễn Thị Thúy Nga
+MSSV: 2124110081
+Lớp: CCQ2411C
