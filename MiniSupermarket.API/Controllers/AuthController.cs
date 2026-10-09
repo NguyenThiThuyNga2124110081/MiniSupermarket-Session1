@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using MiniSupermarket.API.Data;
 
 namespace MiniSupermarket.API.Controllers
 {
@@ -21,16 +23,31 @@ namespace MiniSupermarket.API.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequestDto request)
         {
-            // Kiểm tra tài khoản mẫu (Trong thực tế sẽ truy vấn qua EF Core / SQL Server)
-            if (request.Username == "admin" && request.Password == "123456")
+            if (request == null || string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
             {
-                var token = GenerateJwtToken(request.Username, "Admin");
-                return Ok(new { success = true, token = token, role = "Admin" });
+                return BadRequest(new { success = false, message = "Vui lòng nhập tài khoản và mật khẩu!" });
             }
-            else if (request.Username == "cashier" && request.Password == "123456")
+
+            var user = UserDataStore.Users.FirstOrDefault(u =>
+                u.Username.Equals(request.Username.Trim(), System.StringComparison.OrdinalIgnoreCase) &&
+                u.Password == request.Password.Trim());
+
+            if (user != null)
             {
-                var token = GenerateJwtToken(request.Username, "Cashier");
-                return Ok(new { success = true, token = token, role = "Cashier" });
+                if (!user.IsActive)
+                {
+                    return Unauthorized(new { success = false, message = "Tài khoản đang bị khóa!" });
+                }
+
+                var token = GenerateJwtToken(user.Username, user.Role);
+                return Ok(new
+                {
+                    success = true,
+                    token = token,
+                    role = user.Role,
+                    fullName = user.FullName,
+                    username = user.Username
+                });
             }
 
             return Unauthorized(new { success = false, message = "Sai tài khoản hoặc mật khẩu!" });
@@ -63,4 +80,3 @@ namespace MiniSupermarket.API.Controllers
         public string Password { get; set; } = string.Empty;
     }
 }
-

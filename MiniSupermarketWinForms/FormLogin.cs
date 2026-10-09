@@ -48,11 +48,13 @@ namespace MiniSupermarketWinForms
                     // Trích xuất Token và Role lưu vào lớp tĩnh SessionManager dùng chung toàn ứng dụng
                     SessionManager.JwtToken = doc.RootElement.GetProperty("token").GetString() ?? string.Empty;
                     SessionManager.CurrentRole = doc.RootElement.GetProperty("role").GetString() ?? string.Empty;
+                    // Lưu tên đăng nhập để hiển thị trên Header
+                    SessionManager.CurrentUsername = username;
 
                     MessageBox.Show($"Đăng nhập thành công với quyền: {SessionManager.CurrentRole}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Mở Form quản lý chính (FormCategoryManagement) và ẩn Form đăng nhập đi
-                    FormCategoryManagement mainForm = new FormCategoryManagement();
+                    // Mở Form chính dạng Shell (FormMainShell) và ẩn Form đăng nhập đi
+                    FormMainShell mainForm = new FormMainShell();
                     this.Hide();
                     mainForm.ShowDialog();
                     this.Close(); // Đóng hẳn ứng dụng khi form chính tắt

@@ -8,6 +8,8 @@ namespace MiniSupermarket.WinForms
     {
         public static string JwtToken { get; set; } = string.Empty;
         public static string CurrentRole { get; set; } = string.Empty;
+        // Username được lưu để hiển thị thông tin người dùng trên Header
+        public static string CurrentUsername { get; set; } = string.Empty;
     }
 
     public static class ApiClientService
@@ -17,8 +19,12 @@ namespace MiniSupermarket.WinForms
             BaseAddress = new Uri("https://localhost:7099/api/")  // nhớ chỉnh port phù hợp
         };
 
+        // Public accessor for HttpClient so forms can call API (and attach token when needed)
+        public static HttpClient Client => _client;
+
         // Hàm gọi API đăng nhập lấy Token
-        public static async Task<bool> LoginAsync(string username, string password)
+        // Returns (success, errorMessage). On success JwtToken and CurrentRole are set.
+        public static async Task<(bool Success, string? ErrorMessage)> LoginAsync(string username, string password)
         {
             var loginObj = new { Username = username, Password = password };
             var response = await _client.PostAsJsonAsync("auth/login", loginObj);
@@ -29,9 +35,19 @@ namespace MiniSupermarket.WinForms
                 using var doc = JsonDocument.Parse(jsonString);
                 SessionManager.JwtToken = doc.RootElement.GetProperty("token").GetString() ?? string.Empty;
                 SessionManager.CurrentRole = doc.RootElement.GetProperty("role").GetString() ?? string.Empty;
-                return true;
+                return (true, null);
             }
-            return false;
+
+            // try to read error details from server
+            string error = string.Empty;
+            try
+            {
+                error = await response.Content.ReadAsStringAsync();
+            }
+            catch { }
+
+            string message = !string.IsNullOrWhiteSpace(error) ? error : $"HTTP {(int)response.StatusCode} {response.ReasonPhrase}";
+            return (false, message);
         }
 
         // Hàm gọi API lấy dữ liệu có gắn kèm Bearer Token bảo mật

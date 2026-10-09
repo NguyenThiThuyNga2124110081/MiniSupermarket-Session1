@@ -35,6 +35,33 @@ namespace MiniSupermarket.API.Controllers
                 .ToListAsync();
         }
 
+        // GET: api/Products/barcode/1234 (ENDPOINT GIẢI QUYẾT LỖI 404 CỦA POS)
+        [HttpGet("barcode/{barcode}")]
+        public async Task<ActionResult<object>> GetProductByBarcode(string barcode)
+        {
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.Barcode == barcode)
+                .Select(p => new
+                {
+                    p.ProductId,
+                    p.Barcode,
+                    p.ProductName,
+                    p.Price,
+                    p.StockQuantity,
+                    p.CategoryId,
+                    CategoryName = p.Category != null ? p.Category.CategoryName : ""
+                })
+                .FirstOrDefaultAsync();
+
+            if (product == null)
+            {
+                return NotFound(new { message = "Không tìm thấy sản phẩm với mã vạch này." });
+            }
+
+            return Ok(product);
+        }
+
         // GET: api/Products/search?keyword=...
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<object>>> SearchProducts([FromQuery] string keyword)
