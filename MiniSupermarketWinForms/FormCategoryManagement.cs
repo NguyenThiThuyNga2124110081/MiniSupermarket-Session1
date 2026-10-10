@@ -1,4 +1,4 @@
-﻿using MiniSupermarket.WinForms;
+using MiniSupermarket.WinForms;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -11,12 +11,6 @@ namespace MiniSupermarketWinForms
 {
     public partial class FormCategoryManagement : Form
     {
-        // Hãy kiểm tra đúng Port API của bạn (thay 7099 hoặc 7181 theo đúng Backend)
-        private static readonly HttpClient _client = new HttpClient
-        {
-            BaseAddress = new Uri("https://localhost:7099/api/")
-        };
-
         public FormCategoryManagement()
         {
             InitializeComponent();
@@ -45,29 +39,30 @@ namespace MiniSupermarketWinForms
         {
             if (!string.IsNullOrEmpty(SessionManager.JwtToken))
             {
-                _client.DefaultRequestHeaders.Authorization =
+                ApiClientService.Client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", SessionManager.JwtToken);
             }
         }
 
         // Khi mở Form: Kiểm tra Role để phân quyền giao diện UI
-        private async void FormCategoryManagement_Load(object sender, EventArgs e)
+        private async void FormCategoryManagement_Load(object? sender, EventArgs e)
         {
-            // Nếu không phải Admin (ví dụ: Cashier) thì ẩn/khóa các chức năng CUD
-            if (!string.Equals(SessionManager.CurrentRole, "Admin", StringComparison.OrdinalIgnoreCase))
-            {
-                btnAdd.Enabled = false;
-                btnUpdate.Enabled = false;
-                btnDelete.Enabled = false;
+            // Cấp quyền theo RBAC Buổi 4:
+            // Admin và Warehouse có toàn quyền quản lý Danh mục nhóm hàng
+            // Cashier chỉ được xem (khóa các chức năng Thêm, Sửa, Xóa)
+            bool isCashier = string.Equals(SessionManager.CurrentRole, "Cashier", StringComparison.OrdinalIgnoreCase);
 
-                txtCategoryName.ReadOnly = true;
-                txtDescription.ReadOnly = true;
-            }
+            btnAdd.Enabled = !isCashier;
+            btnUpdate.Enabled = !isCashier;
+            btnDelete.Enabled = !isCashier;
+
+            txtCategoryName.ReadOnly = isCashier;
+            txtDescription.ReadOnly = isCashier;
 
             await LoadDataAsync();
         }
 
-        // Tải danh sách nhóm hàng
+        // Tải danh sách nhóm hàng từ Backend API
         private async Task LoadDataAsync()
         {
             try
@@ -75,150 +70,91 @@ namespace MiniSupermarketWinForms
                 AttachBearerToken();
 
                 var categories =
-                    await _client.GetFromJsonAsync<List<CategoryDto>>("categories");
+                    await ApiClientService.Client.GetFromJsonAsync<List<CategoryDto>>("categories");
 
+                dgvCategories.DataSource = null;
                 dgvCategories.DataSource = categories;
 
-                // Đổi tên tiêu đề các cột hiển thị cho đẹp
+                // Tùy chỉnh tiêu đề và kích thước các cột hiển thị
                 if (dgvCategories.Columns["CategoryId"] != null)
+                {
                     dgvCategories.Columns["CategoryId"].HeaderText = "Mã ID";
+                    dgvCategories.Columns["CategoryId"].Width = 80;
+                }
 
                 if (dgvCategories.Columns["CategoryName"] != null)
+                {
                     dgvCategories.Columns["CategoryName"].HeaderText = "Tên Nhóm hàng";
+                    dgvCategories.Columns["CategoryName"].FillWeight = 45;
+                }
 
                 if (dgvCategories.Columns["Description"] != null)
-                    dgvCategories.Columns["Description"].HeaderText = "Mô tả";
+                {
+                    dgvCategories.Columns["Description"].HeaderText = "Mô tả nhóm hàng";
+                    dgvCategories.Columns["Description"].FillWeight = 55;
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    "Lỗi kết nối Server: " + ex.Message,
-                    "Lỗi",
+                    "Lỗi kết nối Backend API: " + ex.Message +
+                    "\n\n👉 Hướng dẫn khắc phục:\n1. Hãy đảm bảo dự án Backend MiniSupermarket.API đang chạy trên cổng https://localhost:7099.\n2. Trong Visual Studio, cài đặt Multiple Startup Projects để chạy cả API và WinForms.",
+                    "Lỗi kết nối Server",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
         }
 
-        // Tải lại
-        private async void btnLoad_Click(object sender, EventArgs e)
+        // Nút Tải lại danh sách
+        private async void btnLoad_Click(object? sender, EventArgs e)
         {
             ClearInputs();
             await LoadDataAsync();
         }
 
-        // Click vào dòng trong bảng
-        private void dgvCategories_CellClick(object sender, DataGridViewCellEventArgs e)
+        // Click vào dòng trong bảng để đổ dữ liệu lên các ô nhập
+        private void dgvCategories_CellClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0)
+            if (e.RowIndex >= 0 && dgvCategories.Rows[e.RowIndex].DataBoundItem is CategoryDto cat)
+            {
+                txtId.Text = cat.CategoryId.ToString();
+                txtCategoryName.Text = cat.CategoryName;
+                txtDescription.Text = cat.Description ?? string.Empty;
+            }
+            else if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgvCategories.Rows[e.RowIndex];
-
                 txtId.Text = row.Cells["CategoryId"]?.Value?.ToString() ?? "";
                 txtCategoryName.Text = row.Cells["CategoryName"]?.Value?.ToString() ?? "";
                 txtDescription.Text = row.Cells["Description"]?.Value?.ToString() ?? "";
             }
         }
 
-        // THÊM
-        private async void btnAdd_Click(object sender, EventArgs e)
+        // ================= THÊM MỚI NHÓM HÀNG =================
+        private async void btnAdd_Click(object? sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtCategoryName.Text))
+            string catName = txtCategoryName.Text.Trim();
+            if (string.IsNullOrWhiteSpace(catName))
             {
                 MessageBox.Show("Vui lòng nhập tên nhóm hàng!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtCategoryName.Focus();
                 return;
             }
 
             var newCat = new
             {
-                CategoryName = txtCategoryName.Text,
-                Description = txtDescription.Text
+                CategoryName = catName,
+                Description = txtDescription.Text?.Trim()
             };
 
-            AttachBearerToken();
-            var response = await _client.PostAsJsonAsync("categories", newCat);
-
-            if (response.IsSuccessStatusCode)
-            {
-                MessageBox.Show("Thêm mới thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await LoadDataAsync();
-                ClearInputs();
-            }
-            else
-            {
-                string error = await response.Content.ReadAsStringAsync();
-                MessageBox.Show(
-                    "Thêm mới thất bại!\n\nMã lỗi: " + response.StatusCode +
-                    "\n\nChi tiết:\n" + error,
-                    "Lỗi",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
-        }
-
-        // CẬP NHẬT
-        private async void btnUpdate_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(txtId.Text))
-            {
-                MessageBox.Show("Vui lòng chọn nhóm hàng cần sửa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int id = int.Parse(txtId.Text);
-
-            var updateCat = new
-            {
-                CategoryId = id,
-                CategoryName = txtCategoryName.Text,
-                Description = txtDescription.Text
-            };
-
-            AttachBearerToken();
-            var response = await _client.PutAsJsonAsync($"categories/{id}", updateCat);
-
-            if (response.IsSuccessStatusCode)
-            {
-                MessageBox.Show("Cập nhật thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await LoadDataAsync();
-                ClearInputs();
-            }
-            else
-            {
-                string error = await response.Content.ReadAsStringAsync();
-                MessageBox.Show(
-                    "Cập nhật thất bại!\n\nMã lỗi: " + response.StatusCode +
-                    "\n\nChi tiết:\n" + error,
-                    "Lỗi",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
-        }
-
-        // XÓA
-        private async void btnDelete_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(txtId.Text))
-            {
-                MessageBox.Show("Vui lòng chọn nhóm hàng cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int id = int.Parse(txtId.Text);
-
-            var confirm = MessageBox.Show(
-                $"Bạn có chắc muốn xóa nhóm hàng ID = {id}?",
-                "Xác nhận",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (confirm == DialogResult.Yes)
+            try
             {
                 AttachBearerToken();
-                var response = await _client.DeleteAsync($"categories/{id}");
+                var response = await ApiClientService.Client.PostAsJsonAsync("categories", newCat);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    MessageBox.Show("Xóa thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Thêm mới nhóm hàng thành công và đã lưu bền vững vào CSDL SQL Server!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     await LoadDataAsync();
                     ClearInputs();
                 }
@@ -226,17 +162,131 @@ namespace MiniSupermarketWinForms
                 {
                     string error = await response.Content.ReadAsStringAsync();
                     MessageBox.Show(
-                        "Xóa thất bại!\n\nMã lỗi: " + response.StatusCode +
-                        "\n\nChi tiết:\n" + error,
-                        "Lỗi",
+                        $"Thêm mới thất bại từ Server (Mã lỗi HTTP {(int)response.StatusCode})!\n\nChi tiết:\n{error}",
+                        "Lỗi từ Server",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Lỗi kết nối khi gửi yêu cầu thêm mới: " + ex.Message +
+                    "\n\n👉 Vui lòng kiểm tra xem Backend MiniSupermarket.API có đang chạy không!",
+                    "Lỗi kết nối Backend",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        // ================= CẬP NHẬT NHÓM HÀNG =================
+        private async void btnUpdate_Click(object? sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtId.Text) || !int.TryParse(txtId.Text, out int id))
+            {
+                MessageBox.Show("Vui lòng chọn một nhóm hàng từ bảng danh sách để sửa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string catName = txtCategoryName.Text.Trim();
+            if (string.IsNullOrWhiteSpace(catName))
+            {
+                MessageBox.Show("Tên nhóm hàng không được để trống!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtCategoryName.Focus();
+                return;
+            }
+
+            var updateCat = new
+            {
+                CategoryId = id,
+                CategoryName = catName,
+                Description = txtDescription.Text?.Trim()
+            };
+
+            try
+            {
+                AttachBearerToken();
+                var response = await ApiClientService.Client.PutAsJsonAsync($"categories/{id}", updateCat);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Cập nhật nhóm hàng vào CSDL SQL Server thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    await LoadDataAsync();
+                    ClearInputs();
+                }
+                else
+                {
+                    string error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show(
+                        $"Cập nhật thất bại từ Server (Mã lỗi HTTP {(int)response.StatusCode})!\n\nChi tiết:\n{error}",
+                        "Lỗi từ Server",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Lỗi kết nối khi gửi yêu cầu cập nhật: " + ex.Message +
+                    "\n\n👉 Vui lòng kiểm tra xem Backend MiniSupermarket.API có đang chạy không!",
+                    "Lỗi kết nối Backend",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        // ================= XÓA NHÓM HÀNG =================
+        private async void btnDelete_Click(object? sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtId.Text) || !int.TryParse(txtId.Text, out int id))
+            {
+                MessageBox.Show("Vui lòng chọn một nhóm hàng từ bảng danh sách cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var confirm = MessageBox.Show(
+                $"Bạn có chắc chắn muốn xóa nhóm hàng '{txtCategoryName.Text}' (Mã ID = {id}) khỏi CSDL SQL Server không?",
+                "Xác nhận xóa",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (confirm == DialogResult.Yes)
+            {
+                try
+                {
+                    AttachBearerToken();
+                    var response = await ApiClientService.Client.DeleteAsync($"categories/{id}");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show("Xóa nhóm hàng thành công khỏi CSDL SQL Server!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        await LoadDataAsync();
+                        ClearInputs();
+                    }
+                    else
+                    {
+                        string error = await response.Content.ReadAsStringAsync();
+                        MessageBox.Show(
+                            $"Xóa thất bại từ Server (Mã lỗi HTTP {(int)response.StatusCode})!\n\nChi tiết:\n{error}",
+                            "Lỗi từ Server",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "Lỗi kết nối khi gửi yêu cầu xóa: " + ex.Message +
+                        "\n\n👉 Vui lòng kiểm tra xem Backend MiniSupermarket.API có đang chạy không!",
+                        "Lỗi kết nối Backend",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
             }
         }
 
-        // TÌM KIẾM
-        private async void btnSearch_Click(object sender, EventArgs e)
+        // ================= TÌM KIẾM NHÓM HÀNG =================
+        private async void btnSearch_Click(object? sender, EventArgs e)
         {
             string keyword = txtKeyword.Text.Trim();
 
@@ -249,41 +299,45 @@ namespace MiniSupermarketWinForms
             try
             {
                 AttachBearerToken();
-                var result = await _client.GetFromJsonAsync<List<CategoryDto>>($"categories/search?keyword={keyword}");
+                var result = await ApiClientService.Client.GetFromJsonAsync<List<CategoryDto>>($"categories/search?keyword={Uri.EscapeDataString(keyword)}");
+                dgvCategories.DataSource = null;
                 dgvCategories.DataSource = result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Không tìm thấy kết quả phù hợp!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Lỗi tìm kiếm: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         // Chuyển sang Form Quản lý Khách hàng
-        private void btnCustomerManagement_Click(object sender, EventArgs e)
+        private void btnCustomerManagement_Click(object? sender, EventArgs e)
         {
             this.Hide();
-            FormCustomerManagement customerForm = new FormCustomerManagement();
+            using FormCustomerManagement customerForm = new FormCustomerManagement();
             customerForm.ShowDialog();
             this.Show();
         }
 
         // Chuyển sang Form Quản lý Sản phẩm
-        private void btnProductManagement_Click(object sender, EventArgs e)
+        private void btnProductManagement_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show("Đang mở giao diện Quản lý Sản phẩm!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Hide();
+            using FormProductManagement prodForm = new FormProductManagement();
+            prodForm.ShowDialog();
+            this.Show();
         }
 
-        // Xóa ô nhập
+        // Xóa các ô nhập liệu
         private void ClearInputs()
         {
-            txtId.Text = "";
-            txtCategoryName.Text = "";
-            txtDescription.Text = "";
-            txtKeyword.Text = "";
+            txtId.Clear();
+            txtCategoryName.Clear();
+            txtDescription.Clear();
+            txtKeyword.Clear();
         }
     }
 
-    // DTO
+    // DTO nhóm hàng
     public class CategoryDto
     {
         public int CategoryId { get; set; }

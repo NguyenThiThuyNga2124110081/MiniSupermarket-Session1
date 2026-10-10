@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -14,9 +14,14 @@ namespace MiniSupermarket.WinForms
 
     public static class ApiClientService
     {
-        private static readonly HttpClient _client = new HttpClient
+        private static readonly HttpClientHandler _handler = new HttpClientHandler
         {
-            BaseAddress = new Uri("https://localhost:7099/api/")  // nhớ chỉnh port phù hợp
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+
+        private static readonly HttpClient _client = new HttpClient(_handler)
+        {
+            BaseAddress = new Uri("https://localhost:7099/api/")  // Backend API port
         };
 
         // Public accessor for HttpClient so forms can call API (and attach token when needed)

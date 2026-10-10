@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MiniSupermarket.API.Data;
 using MiniSupermarket.API.Models;
@@ -64,7 +64,7 @@ namespace MiniSupermarket.API.Controllers
             _context.Categories.Add(newCat);
             await _context.SaveChangesAsync(); // Lưu thay đổi vào SQL Server
 
-            return CreatedAtAction(nameof(GetById), new { id = newCat.CategoryId }, newCat);
+            return Ok(newCat);
         }
 
         // 5. UPDATE: Cập nhật nhóm hàng vào Database
@@ -81,7 +81,7 @@ namespace MiniSupermarket.API.Controllers
             cat.Description = updateCat.Description;
 
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(cat);
         }
 
         // 6. DELETE: Xóa nhóm hàng khỏi Database
@@ -94,9 +94,16 @@ namespace MiniSupermarket.API.Controllers
                 return NotFound(new { message = "Không tìm thấy nhóm hàng cần xóa!" });
             }
 
+            // Kiểm tra ràng buộc khóa ngoại với sản phẩm
+            bool hasProducts = await _context.Products.AnyAsync(p => p.CategoryId == id);
+            if (hasProducts)
+            {
+                return BadRequest(new { message = "Không thể xóa nhóm hàng này vì đang có sản phẩm thuộc danh mục!" });
+            }
+
             _context.Categories.Remove(cat);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(new { message = "Đã xóa nhóm hàng thành công!" });
         }
     }
 }

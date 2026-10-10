@@ -46,32 +46,92 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CategoryId = 1,
-                            CategoryName = "Bánh kẹo & Đồ ăn vặt",
-                            Description = "Snack, bánh quy, kẹo dẻo"
+                            CategoryName = "Trà Chanh & Trà Trái Cây",
+                            Description = "Các loại trà chanh giã tay, trà đào cam sả, trà dầm giải nhiệt"
                         },
                         new
                         {
                             CategoryId = 2,
-                            CategoryName = "Nước giải khát & Trà",
-                            Description = "Nước ngọt, nước khoáng, trà"
+                            CategoryName = "Trà Sữa & Đồ Uống Pha Chế",
+                            Description = "Trà sữa truyền thống, macchiato, cacao, cà phê pha máy"
                         },
                         new
                         {
                             CategoryId = 3,
-                            CategoryName = "Sữa & Sản phẩm từ sữa",
-                            Description = "Sữa tươi, sữa chua, phô mai"
+                            CategoryName = "Ăn Vặt Hot Trend (Nóng/Chiên)",
+                            Description = "Mẹt ăn vặt, cá viên chiên, khoai tây lắc, nem chua rán, gà rán"
                         },
                         new
                         {
                             CategoryId = 4,
-                            CategoryName = "Mì gói & Thực phẩm ăn liền",
-                            Description = "Mì ăn liền, phở khô, cháo gói"
+                            CategoryName = "Khô Đóng Gói & Đồ Nhắm Chill",
+                            Description = "Khô gà lá chanh, khô bò, khô mực, cơm cháy chà bông"
                         },
                         new
                         {
                             CategoryId = 5,
-                            CategoryName = "Gia vị & Dầu ăn",
-                            Description = "Nước mắm, hạt nêm, dầu thực vật"
+                            CategoryName = "Bánh Tráng & Món Ăn Vặt Sài Gòn",
+                            Description = "Bánh tráng trộn, bánh tráng cuộn, bánh tráng phơi sương, xì xì"
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            CategoryName = "Topping & Trái Cây Thêm",
+                            Description = "Trân châu đen/trắng, thạch dừa, khúc bạch, pudding, sương sáo"
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            CategoryName = "Nước Ngọt & Nước Giải Khát Lon/Chai",
+                            Description = "Nước có gas, nước tăng lực, trà xanh đóng chai, nước suối"
+                        },
+                        new
+                        {
+                            CategoryId = 8,
+                            CategoryName = "Kem & Đồ Lạnh Giải Nhiệt",
+                            Description = "Kem que, kem ốc quế, đá bào tuyết, kem hộp các loại"
+                        },
+                        new
+                        {
+                            CategoryId = 9,
+                            CategoryName = "Mì Ăn Liền & Đồ Đóng Hộp Nhanh",
+                            Description = "Mì ly, mì trộn Hàn Quốc, xúc xích ăn liền, phô mai que"
+                        },
+                        new
+                        {
+                            CategoryId = 10,
+                            CategoryName = "Bánh Kẹo Tạp Hóa & Snack Import",
+                            Description = "Snack khoai tây, bánh quy, kẹo dẻo, kẹo ngậm thanh mát"
+                        },
+                        new
+                        {
+                            CategoryId = 11,
+                            CategoryName = "Sữa & Sản Phẩm Từ Sữa",
+                            Description = "Sữa tươi đóng hộp, sữa chua ăn/uống, phô mai con bò cười"
+                        },
+                        new
+                        {
+                            CategoryId = 12,
+                            CategoryName = "Hạt Dinh Dưỡng & Đồ Ăn Kiêng",
+                            Description = "Hạt hướng dương, hạt điều, hạt macca, ngũ cốc granola"
+                        },
+                        new
+                        {
+                            CategoryId = 13,
+                            CategoryName = "Gia Vị & Nước Chấm Ăn Vặt",
+                            Description = "Tương ớt, sốt mayonaise, muối tôm Tây Ninh, sốt me, sa tế"
+                        },
+                        new
+                        {
+                            CategoryId = 14,
+                            CategoryName = "Văn Phòng Phẩm & Đồ Dùng Học Sinh",
+                            Description = "Bút highlight, sổ tay Chill Store, khẩu trang, phụ kiện xinh"
+                        },
+                        new
+                        {
+                            CategoryId = 15,
+                            CategoryName = "Hóa Mỹ Phẩm & Đồ Tiện Lợi Cá Nhân",
+                            Description = "Khăn giấy khô/ướt, xịt thơm miệng, nước rửa tay khô"
                         });
                 });
 
@@ -113,7 +173,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 1,
-                            Address = "Hà Nội",
+                            Address = "123 Nguyễn Trãi, Q. Thanh Xuân, Hà Nội",
                             CustomerName = "Nguyễn Văn A",
                             MembershipRank = "Vàng",
                             PhoneNumber = "0901122334",
@@ -122,7 +182,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 2,
-                            Address = "TP.HCM",
+                            Address = "456 Lê Duẩn, Q. 1, TP.HCM",
                             CustomerName = "Trần Thị B",
                             MembershipRank = "Bạc",
                             PhoneNumber = "0918877665",
@@ -131,7 +191,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 3,
-                            Address = "Đà Nẵng",
+                            Address = "789 Điện Biên Phủ, Q. Thanh Khê, Đà Nẵng",
                             CustomerName = "Lê Văn C",
                             MembershipRank = "Chuẩn",
                             PhoneNumber = "0983344556",
@@ -140,7 +200,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 4,
-                            Address = "Cần Thơ",
+                            Address = "12 Hòa Bình, Q. Ninh Kiều, Cần Thơ",
                             CustomerName = "Phạm Minh Đức",
                             MembershipRank = "Bạch Kim",
                             PhoneNumber = "0971234567",
@@ -149,7 +209,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 5,
-                            Address = "Hải Phòng",
+                            Address = "34 Lạch Tray, Q. Ngô Quyền, Hải Phòng",
                             CustomerName = "Hoàng Thu Thảo",
                             MembershipRank = "Vàng",
                             PhoneNumber = "0934567890",
@@ -158,7 +218,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 6,
-                            Address = "Bình Dương",
+                            Address = "56 Đại lộ Bình Dương, TP. Thủ Dầu Một, Bình Dương",
                             CustomerName = "Đỗ Quốc Anh",
                             MembershipRank = "Chuẩn",
                             PhoneNumber = "0945678901",
@@ -167,7 +227,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 7,
-                            Address = "Đồng Nai",
+                            Address = "89 Đồng Khởi, TP. Biên Hòa, Đồng Nai",
                             CustomerName = "Vũ Mỹ Linh",
                             MembershipRank = "Bạc",
                             PhoneNumber = "0967890123",
@@ -176,7 +236,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 8,
-                            Address = "Quảng Ninh",
+                            Address = "67 Trần Hưng Đạo, TP. Hạ Long, Quảng Ninh",
                             CustomerName = "Bùi Tấn Phát",
                             MembershipRank = "Vàng",
                             PhoneNumber = "0923456789",
@@ -185,7 +245,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 9,
-                            Address = "Huế",
+                            Address = "23 Hùng Vương, TP. Huế, Thừa Thiên Huế",
                             CustomerName = "Đặng Hồng Hạnh",
                             MembershipRank = "Chuẩn",
                             PhoneNumber = "0956789012",
@@ -194,7 +254,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 10,
-                            Address = "Nha Trang",
+                            Address = "90 Trần Phú, TP. Nha Trang, Khánh Hòa",
                             CustomerName = "Ngô Gia Bảo",
                             MembershipRank = "Bạch Kim",
                             PhoneNumber = "0987654321",
@@ -203,7 +263,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 11,
-                            Address = "TP.HCM",
+                            Address = "15 Nguyễn Đình Chiểu, Q. 3, TP.HCM",
                             CustomerName = "Dương Ngọc Trinh",
                             MembershipRank = "Bạc",
                             PhoneNumber = "0912345678",
@@ -212,7 +272,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 12,
-                            Address = "Hà Nội",
+                            Address = "88 Cầu Giấy, Q. Cầu Giấy, Hà Nội",
                             CustomerName = "Lý Khánh Vân",
                             MembershipRank = "Vàng",
                             PhoneNumber = "0938765432",
@@ -221,7 +281,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 13,
-                            Address = "Vũng Tàu",
+                            Address = "102 Thùy Vân, TP. Vũng Tàu, Bà Rịa - Vũng Tàu",
                             CustomerName = "Mai Xuân Trường",
                             MembershipRank = "Chuẩn",
                             PhoneNumber = "0941239876",
@@ -230,7 +290,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 14,
-                            Address = "Lâm Đồng",
+                            Address = "45 Phan Đình Phùng, TP. Đà Lạt, Lâm Đồng",
                             CustomerName = "Trịnh Kim Ngân",
                             MembershipRank = "Bạc",
                             PhoneNumber = "0965432109",
@@ -239,7 +299,7 @@ namespace MiniSupermarket.API.Migrations
                         new
                         {
                             CustomerId = 15,
-                            Address = "Kiên Giang",
+                            Address = "78 Nguyễn Trung Trực, TP. Rạch Giá, Kiên Giang",
                             CustomerName = "Đoàn Hải Nam",
                             MembershipRank = "Bạch Kim",
                             PhoneNumber = "0978901234",
@@ -279,6 +339,143 @@ namespace MiniSupermarket.API.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductId = 1,
+                            Barcode = "8931111001011",
+                            CategoryId = 1,
+                            Price = 20000m,
+                            ProductName = "Trà Chanh Giã Tay Quảng Đông",
+                            StockQuantity = 100
+                        },
+                        new
+                        {
+                            ProductId = 2,
+                            Barcode = "8931111001028",
+                            CategoryId = 1,
+                            Price = 25000m,
+                            ProductName = "Trà Đào Cam Sả Chill",
+                            StockQuantity = 120
+                        },
+                        new
+                        {
+                            ProductId = 3,
+                            Barcode = "8931111001035",
+                            CategoryId = 1,
+                            Price = 18000m,
+                            ProductName = "Trà Tắc Xí Muội Đường Phèn",
+                            StockQuantity = 90
+                        },
+                        new
+                        {
+                            ProductId = 4,
+                            Barcode = "8931111002011",
+                            CategoryId = 2,
+                            Price = 30000m,
+                            ProductName = "Trà Sữa Trân Châu Đường Đen",
+                            StockQuantity = 150
+                        },
+                        new
+                        {
+                            ProductId = 5,
+                            Barcode = "8931111002028",
+                            CategoryId = 2,
+                            Price = 32000m,
+                            ProductName = "Trà Ô Long Macchiato",
+                            StockQuantity = 80
+                        },
+                        new
+                        {
+                            ProductId = 6,
+                            Barcode = "8931111002035",
+                            CategoryId = 2,
+                            Price = 35000m,
+                            ProductName = "Cacao Đá Xay Nhúng Kem",
+                            StockQuantity = 60
+                        },
+                        new
+                        {
+                            ProductId = 7,
+                            Barcode = "8931111002042",
+                            CategoryId = 2,
+                            Price = 22000m,
+                            ProductName = "Bạc Xỉu Đá Sài Gòn",
+                            StockQuantity = 110
+                        },
+                        new
+                        {
+                            ProductId = 8,
+                            Barcode = "8931111003011",
+                            CategoryId = 3,
+                            Price = 65000m,
+                            ProductName = "Mẹt Ăn Vặt Thập Cẩm (Khổng Lồ)",
+                            StockQuantity = 50
+                        },
+                        new
+                        {
+                            ProductId = 9,
+                            Barcode = "8931111003028",
+                            CategoryId = 3,
+                            Price = 40000m,
+                            ProductName = "Nem Chua Rán Hà Nội (10 Cái)",
+                            StockQuantity = 70
+                        },
+                        new
+                        {
+                            ProductId = 10,
+                            Barcode = "8931111003035",
+                            CategoryId = 3,
+                            Price = 25000m,
+                            ProductName = "Khoai Tây Lắc Phô Mai Extra",
+                            StockQuantity = 100
+                        },
+                        new
+                        {
+                            ProductId = 11,
+                            Barcode = "8931111004011",
+                            CategoryId = 4,
+                            Price = 45000m,
+                            ProductName = "Khô Gá Lá Chanh Hũ 250g",
+                            StockQuantity = 85
+                        },
+                        new
+                        {
+                            ProductId = 12,
+                            Barcode = "8931111004028",
+                            CategoryId = 4,
+                            Price = 35000m,
+                            ProductName = "Cơm Cháy Sốt Mắm Hành 200g",
+                            StockQuantity = 95
+                        },
+                        new
+                        {
+                            ProductId = 13,
+                            Barcode = "8931111004035",
+                            CategoryId = 4,
+                            Price = 20000m,
+                            ProductName = "Bánh Gấu Nhân Cơm Sữa 150g",
+                            StockQuantity = 130
+                        },
+                        new
+                        {
+                            ProductId = 14,
+                            Barcode = "8931111005011",
+                            CategoryId = 5,
+                            Price = 5000m,
+                            ProductName = "Topping Trân Châu Ô Long",
+                            StockQuantity = 200
+                        },
+                        new
+                        {
+                            ProductId = 15,
+                            Barcode = "8931111005028",
+                            CategoryId = 5,
+                            Price = 8000m,
+                            ProductName = "Topping Pudding Phô Mai",
+                            StockQuantity = 150
+                        });
                 });
 
             modelBuilder.Entity("MiniSupermarket.API.Models.Product", b =>

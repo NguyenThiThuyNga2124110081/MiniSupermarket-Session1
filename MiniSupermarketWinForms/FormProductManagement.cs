@@ -18,6 +18,7 @@ namespace MiniSupermarketWinForms
             InitializeComponent();
 
             this.Load += FormProductManagement_Load;
+            this.Resize += (s, e) => AdjustSplitter();
             this.btnLoad.Click += async (s, e) =>
             {
                 txtSearchBarcode.Clear();
@@ -28,15 +29,35 @@ namespace MiniSupermarketWinForms
             this.btnUpdate.Click += btnUpdate_Click;
             this.btnDelete.Click += btnDelete_Click;
             this.btnSearch.Click += btnSearch_Click;
+            this.btnClearInputs.Click += (s, e) => ClearInputs();
             this.dgvProducts.CellClick += dgvProducts_CellClick;
             this.cboFilterCategory.SelectedIndexChanged += cboFilterCategory_SelectedIndexChanged;
         }
 
         private async void FormProductManagement_Load(object? sender, EventArgs e)
         {
+            AdjustSplitter();
             SetupGridColumns();
             await LoadCategoriesToComboAsync();
             await LoadProductsAsync();
+        }
+
+        private void AdjustSplitter()
+        {
+            try
+            {
+                int desiredPanel2Width = 440;
+                int minPanel1 = 300;
+                if (split.Width > desiredPanel2Width + minPanel1)
+                {
+                    int target = split.Width - desiredPanel2Width;
+                    if (target > 50 && target < split.Width - 100)
+                    {
+                        split.SplitterDistance = target;
+                    }
+                }
+            }
+            catch { }
         }
 
         private void SetupGridColumns()
@@ -44,17 +65,26 @@ namespace MiniSupermarketWinForms
             dgvProducts.AutoGenerateColumns = false;
             dgvProducts.Columns.Clear();
 
+            dgvProducts.RowTemplate.Height = 32;
+            dgvProducts.ColumnHeadersHeight = 36;
+            dgvProducts.EnableHeadersVisualStyles = false;
+            dgvProducts.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(240, 243, 248);
+            dgvProducts.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+            dgvProducts.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            dgvProducts.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular);
+
             dgvProducts.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ProductId",
                 HeaderText = "Mã SP",
-                Width = 70
+                Width = 70,
+                DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
             dgvProducts.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Barcode",
                 HeaderText = "Mã Vạch",
-                Width = 130
+                Width = 135
             });
             dgvProducts.Columns.Add(new DataGridViewTextBoxColumn
             {
@@ -67,13 +97,14 @@ namespace MiniSupermarketWinForms
                 DataPropertyName = "Price",
                 HeaderText = "Đơn Giá",
                 Width = 110,
-                DefaultCellStyle = new DataGridViewCellStyle { Format = "N0" }
+                DefaultCellStyle = new DataGridViewCellStyle { Format = "N0", Alignment = DataGridViewContentAlignment.MiddleRight }
             });
             dgvProducts.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StockQuantity",
                 HeaderText = "Tồn Kho",
-                Width = 85
+                Width = 85,
+                DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
             dgvProducts.Columns.Add(new DataGridViewTextBoxColumn
             {
