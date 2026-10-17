@@ -10,6 +10,7 @@ Bài thực hành: Buổi 04 - Thiết kế Kiến trúc Giao diện WinForms Sh
 Họ và tên: Nguyễn Thị Thúy Nga  
 Mã số sinh viên: 2124110081  
 Lớp: CCQ2411C  
+Đề tài: Tiệm Trà chanh & Tạp hóa vặt Chill Store
 
 ---
 BUỔI 6: ENTITY FRAMEWORK CORE NÂNG CAO, PHÂN TRANG LINQ & TÍCH HỢP TOÀN DIỆN HỆ THỐNG POS CLIENT - SERVER
