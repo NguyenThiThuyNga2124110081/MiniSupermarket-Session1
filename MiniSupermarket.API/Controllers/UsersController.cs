@@ -9,9 +9,32 @@ namespace MiniSupermarket.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly SupermarketDbContext _context;
+
+        public UsersController(SupermarketDbContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<object>> GetUsers()
         {
+            // Lấy từ CSDL SQL Server
+            var dbList = _context.Users.Select(u => new
+            {
+                Id = u.Id,
+                Username = u.Username,
+                FullName = u.FullName,
+                Role = u.Role,
+                IsActive = u.IsActive
+            }).ToList();
+
+            if (dbList.Count > 0)
+            {
+                return Ok(dbList);
+            }
+
+            // Fallback sang in-memory nếu chưa nạp
             var list = UserDataStore.Users.Select(u => new
             {
                 Id = u.Id,
@@ -31,24 +54,37 @@ namespace MiniSupermarket.API.Controllers
                 return BadRequest(new { message = "Thông tin không hợp lệ." });
             }
 
-            if (UserDataStore.Users.Any(u => u.Username.Equals(request.Username.Trim(), System.StringComparison.OrdinalIgnoreCase)))
+            var trimmedUsername = request.Username.Trim();
+            if (_context.Users.Any(u => u.Username.ToLower() == trimmedUsername.ToLower()) ||
+                UserDataStore.Users.Any(u => u.Username.Equals(trimmedUsername, System.StringComparison.OrdinalIgnoreCase)))
             {
                 return BadRequest(new { message = "Tên đăng nhập đã tồn tại!" });
             }
 
-            int newId = UserDataStore.Users.Count > 0 ? UserDataStore.Users.Max(u => u.Id) + 1 : 1;
-            var newUser = new UserAccount
+            var newDbUser = new MiniSupermarket.API.Models.User
             {
-                Id = newId,
-                Username = request.Username.Trim(),
+                Username = trimmedUsername,
                 Password = request.Password.Trim(),
                 FullName = request.FullName?.Trim() ?? string.Empty,
                 Role = string.IsNullOrWhiteSpace(request.Role) ? "Cashier" : request.Role.Trim(),
                 IsActive = true
             };
 
-            UserDataStore.Users.Add(newUser);
-            return Ok(new { message = "Tạo tài khoản thành công!", id = newId });
+            _context.Users.Add(newDbUser);
+            _context.SaveChanges();
+
+            // Đồng bộ sang UserDataStore
+            UserDataStore.Users.Add(new UserAccount
+            {
+                Id = newDbUser.Id,
+                Username = newDbUser.Username,
+                Password = newDbUser.Password,
+                FullName = newDbUser.FullName,
+                Role = newDbUser.Role,
+                IsActive = newDbUser.IsActive
+            });
+
+            return Ok(new { message = "Tạo tài khoản thành công!", id = newDbUser.Id });
         }
     }
 

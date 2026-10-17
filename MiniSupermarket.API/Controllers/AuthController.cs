@@ -13,10 +13,12 @@ namespace MiniSupermarket.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly SupermarketDbContext _context;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration configuration, SupermarketDbContext context)
         {
             _configuration = configuration;
+            _context = context;
         }
 
         // Endpoint Đăng nhập: POST /api/auth/login
@@ -28,9 +30,33 @@ namespace MiniSupermarket.API.Controllers
                 return BadRequest(new { success = false, message = "Vui lòng nhập tài khoản và mật khẩu!" });
             }
 
+            var trimmedUser = request.Username.Trim();
+            var trimmedPass = request.Password.Trim();
+
+            // 1. Kiểm tra trong bảng Users của cơ sở dữ liệu SQL Server
+            var dbUser = _context.Users.FirstOrDefault(u => u.Username.ToLower() == trimmedUser.ToLower() && u.Password == trimmedPass);
+            if (dbUser != null)
+            {
+                if (!dbUser.IsActive)
+                {
+                    return Unauthorized(new { success = false, message = "Tài khoản đang bị khóa!" });
+                }
+
+                var token = GenerateJwtToken(dbUser.Username, dbUser.Role);
+                return Ok(new
+                {
+                    success = true,
+                    token = token,
+                    role = dbUser.Role,
+                    fullName = dbUser.FullName,
+                    username = dbUser.Username
+                });
+            }
+
+            // 2. Fallback sang UserDataStore
             var user = UserDataStore.Users.FirstOrDefault(u =>
-                u.Username.Equals(request.Username.Trim(), System.StringComparison.OrdinalIgnoreCase) &&
-                u.Password == request.Password.Trim());
+                u.Username.Equals(trimmedUser, System.StringComparison.OrdinalIgnoreCase) &&
+                u.Password == trimmedPass);
 
             if (user != null)
             {

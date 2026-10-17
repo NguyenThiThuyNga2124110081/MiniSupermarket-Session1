@@ -13,6 +13,8 @@ namespace MiniSupermarketWinForms
         private System.Windows.Forms.Panel panelCardRevenue;
         private System.Windows.Forms.Panel panelCardBestSeller;
         private System.Windows.Forms.Panel panelTopFilter;
+        private System.Windows.Forms.DataGridView dgvCashierReport;
+        private System.Windows.Forms.Panel panelGridContainer;
 
         protected override void Dispose(bool disposing)
         {
@@ -154,11 +156,41 @@ namespace MiniSupermarketWinForms
             panelCards.Controls.Add(this.panelCardRevenue, 1, 0);
             panelCards.Controls.Add(this.panelCardBestSeller, 2, 0);
 
+            //
+            // panelGridContainer & dgvCashierReport
+            //
+            this.panelGridContainer = new System.Windows.Forms.Panel();
+            this.panelGridContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelGridContainer.Padding = new System.Windows.Forms.Padding(20, 10, 20, 20);
+
+            var lblGridTitle = new System.Windows.Forms.Label();
+            lblGridTitle.Text = "CHI TIẾT DOANH THU THEO TỪNG THU NGÂN (STORED PROCEDURE: sp_GetRevenueByCashier)";
+            lblGridTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            lblGridTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+            lblGridTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            lblGridTitle.Height = 35;
+
+            this.dgvCashierReport = new System.Windows.Forms.DataGridView();
+            this.dgvCashierReport.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvCashierReport.BackgroundColor = System.Drawing.Color.White;
+            this.dgvCashierReport.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.dgvCashierReport.ReadOnly = true;
+            this.dgvCashierReport.AllowUserToAddRows = false;
+            this.dgvCashierReport.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvCashierReport.RowHeadersVisible = false;
+            this.dgvCashierReport.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvCashierReport.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.dgvCashierReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+
+            this.panelGridContainer.Controls.Add(this.dgvCashierReport);
+            this.panelGridContainer.Controls.Add(lblGridTitle);
+
             // 
             // FormQuickReport
             // 
-            this.ClientSize = new System.Drawing.Size(1050, 600);
+            this.ClientSize = new System.Drawing.Size(1050, 650);
             this.BackColor = System.Drawing.Color.FromArgb(244, 245, 247);
+            this.Controls.Add(this.panelGridContainer);
             this.Controls.Add(panelCards);
             this.Controls.Add(this.panelTopFilter);
             this.Text = "BÁO CÁO DOANH THU & HIỆU SUẤT";

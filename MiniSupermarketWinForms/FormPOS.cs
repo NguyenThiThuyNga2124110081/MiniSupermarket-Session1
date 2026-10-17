@@ -65,7 +65,18 @@ namespace MiniSupermarketWinForms
         {
             try
             {
-                var product = await ApiClientService.Client.GetFromJsonAsync<ProductDto>($"products/barcode/{barcode}");
+                ProductDto? product = null;
+                try
+                {
+                    // Ưu tiên tra cứu siêu tốc qua ADO.NET SqlDataReader (<100ms) của Buổi 5
+                    product = await ApiClientService.Client.GetFromJsonAsync<ProductDto>($"ado-products/barcode/{barcode}");
+                }
+                catch
+                {
+                    // Fallback sang endpoint products thông thường
+                    product = await ApiClientService.Client.GetFromJsonAsync<ProductDto>($"products/barcode/{barcode}");
+                }
+
                 if (product == null)
                 {
                     MessageBox.Show("Không tìm thấy sản phẩm có mã vạch này!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -140,24 +151,50 @@ namespace MiniSupermarketWinForms
 
             var orderRequest = new
             {
-                CashierUsername = SessionManager.CurrentUsername,
-                CustomerPhone = txtCustomerPhone?.Text.Trim(),
+                CashierUsername = string.IsNullOrWhiteSpace(SessionManager.CurrentUsername) ? "cashier01" : SessionManager.CurrentUsername,
+                CustomerId = (int?)null,
                 Items = _cart.Select(i => new { i.ProductId, i.Quantity, i.UnitPrice }).ToList()
             };
 
-            var response = await ApiClientService.Client.PostAsJsonAsync("orders/checkout", orderRequest);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                MessageBox.Show("Thanh toán thành công và đã in hóa đơn!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                _cart.Clear();
-                UpdateCartDisplay();
-                if (txtCashReceived != null) txtCashReceived.Clear();
-                if (txtCustomerPhone != null) txtCustomerPhone.Clear();
-                if (lblCustomerName != null) lblCustomerName.Text = "Khách vãng lai";
+                var response = await ApiClientService.Client.PostAsJsonAsync("checkout", orderRequest);
+                if (response.IsSuccessStatusCode)
+                {
+                    string orderInfo = "Thanh toán thành công!";
+                    try
+                    {
+                        var resJson = await response.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+                        if (resJson.TryGetProperty("orderCode", out var oc))
+                        {
+                            orderInfo = $"Thanh toán hóa đơn [{oc.GetString()}] thành công và đã cập nhật tồn kho an toàn!";
+                        }
+                    }
+                    catch { }
+
+                    MessageBox.Show(orderInfo, "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _cart.Clear();
+                    UpdateCartDisplay();
+                    if (txtCashReceived != null) txtCashReceived.Clear();
+                    if (txtCustomerPhone != null) txtCustomerPhone.Clear();
+                    if (lblCustomerName != null) lblCustomerName.Text = "Khách vãng lai";
+                }
+                else
+                {
+                    string errorMsg = "Thanh toán thất bại từ máy chủ!";
+                    try
+                    {
+                        var errorObj = await response.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+                        if (errorObj.TryGetProperty("errorDetail", out var ed)) errorMsg = ed.GetString() ?? errorMsg;
+                        else if (errorObj.TryGetProperty("message", out var m)) errorMsg = m.GetString() ?? errorMsg;
+                    }
+                    catch { }
+                    MessageBox.Show(errorMsg, "Lỗi Giao Dịch POS (Rollback)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Thanh toán thất bại từ máy chủ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi kết nối máy chủ thanh toán: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
