@@ -11,6 +11,10 @@ namespace MiniSupermarketWinForms
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.SplitContainer split;
         private System.Windows.Forms.DataGridView dgvProducts;
+        private System.Windows.Forms.Panel panelPaging;
+        private System.Windows.Forms.Button btnPrev;
+        private System.Windows.Forms.Label lblPaging;
+        private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Panel panelDetails;
         private System.Windows.Forms.Label lblDetailsTitle;
         private System.Windows.Forms.Label lblId;
@@ -51,6 +55,10 @@ namespace MiniSupermarketWinForms
             this.btnLoad = new System.Windows.Forms.Button();
             this.split = new System.Windows.Forms.SplitContainer();
             this.dgvProducts = new System.Windows.Forms.DataGridView();
+            this.panelPaging = new System.Windows.Forms.Panel();
+            this.btnPrev = new System.Windows.Forms.Button();
+            this.lblPaging = new System.Windows.Forms.Label();
+            this.btnNext = new System.Windows.Forms.Button();
             this.panelDetails = new System.Windows.Forms.Panel();
             this.lblDetailsTitle = new System.Windows.Forms.Label();
             this.lblId = new System.Windows.Forms.Label();
@@ -74,6 +82,7 @@ namespace MiniSupermarketWinForms
             this.split.Panel1.SuspendLayout();
             this.split.Panel2.SuspendLayout();
             this.split.SuspendLayout();
+            this.panelPaging.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPrice)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudStock)).BeginInit();
@@ -138,7 +147,7 @@ namespace MiniSupermarketWinForms
             this.split.TabIndex = 1;
 
             // 
-            // split.Panel1: dgvProducts (Bảng dữ liệu bên trái)
+            // split.Panel1: dgvProducts (Bảng dữ liệu bên trái) + panelPaging
             // 
             this.dgvProducts.AllowUserToAddRows = false;
             this.dgvProducts.AllowUserToDeleteRows = false;
@@ -154,7 +163,50 @@ namespace MiniSupermarketWinForms
             this.dgvProducts.MultiSelect = false;
             this.dgvProducts.RowTemplate.Height = 32;
             this.dgvProducts.ColumnHeadersHeight = 36;
+
+            // 
+            // panelPaging: Thanh điều hướng phân trang (Dưới bảng dữ liệu)
+            // 
+            this.panelPaging.BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+            this.panelPaging.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelPaging.Height = 48;
+            this.panelPaging.Padding = new System.Windows.Forms.Padding(16, 8, 16, 8);
+
+            this.btnPrev.Location = new System.Drawing.Point(16, 8);
+            this.btnPrev.Name = "btnPrev";
+            this.btnPrev.Size = new System.Drawing.Size(140, 32);
+            this.btnPrev.Text = "⏪ Trang trước";
+            this.btnPrev.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnPrev.BackColor = System.Drawing.Color.FromArgb(24, 30, 48);
+            this.btnPrev.ForeColor = System.Drawing.Color.White;
+            this.btnPrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrev.FlatAppearance.BorderSize = 0;
+            this.btnPrev.Enabled = false;
+
+            this.lblPaging.Location = new System.Drawing.Point(170, 14);
+            this.lblPaging.Name = "lblPaging";
+            this.lblPaging.AutoSize = true;
+            this.lblPaging.Text = "Trang 1 / 1 (Tổng: 0 SP)";
+            this.lblPaging.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblPaging.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+
+            this.btnNext.Location = new System.Drawing.Point(400, 8);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(140, 32);
+            this.btnNext.Text = "Trang sau ⏩";
+            this.btnNext.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnNext.BackColor = System.Drawing.Color.FromArgb(24, 30, 48);
+            this.btnNext.ForeColor = System.Drawing.Color.White;
+            this.btnNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNext.FlatAppearance.BorderSize = 0;
+            this.btnNext.Enabled = false;
+
+            this.panelPaging.Controls.Add(this.btnPrev);
+            this.panelPaging.Controls.Add(this.lblPaging);
+            this.panelPaging.Controls.Add(this.btnNext);
+
             this.split.Panel1.Controls.Add(this.dgvProducts);
+            this.split.Panel1.Controls.Add(this.panelPaging);
 
             // 
             // split.Panel2: panelDetails (Khung chi tiết bên phải rộng 440px, bố cục chuẩn)
@@ -336,11 +388,17 @@ namespace MiniSupermarketWinForms
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPrice)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudStock)).EndInit();
+            this.panelPaging.ResumeLayout(false);
+            this.panelPaging.PerformLayout();
             this.panelDetails.ResumeLayout(false);
             this.panelDetails.PerformLayout();
             this.ResumeLayout(false);
         }
 
         #endregion
+
+        // Thuộc tính tiện ích tương thích mã nguồn giáo trình Buổi 6
+        public System.Windows.Forms.TextBox txtSearch => txtSearchBarcode;
+        public System.Windows.Forms.Button btnCreate => btnAdd;
     }
 }

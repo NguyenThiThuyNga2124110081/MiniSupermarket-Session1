@@ -1,3 +1,9 @@
+/*
+ * Họ tên sinh viên: Nguyễn Thị Thúy Nga
+ * Mã sinh viên: 2124110081
+ * Lớp: CCQ2411C
+ * Mô tả: Form Quản lý Danh mục Nhóm hàng - Hỗ trợ phân trang LINQ, tìm kiếm và CRUD đồng bộ SQL Server
+ */
 using MiniSupermarket.WinForms;
 using System;
 using System.Collections.Generic;
@@ -11,6 +17,10 @@ namespace MiniSupermarketWinForms
 {
     public partial class FormCategoryManagement : Form
     {
+        private int _currentPage = 1;
+        private readonly int _pageSize = 5;
+        private int _totalPages = 1;
+
         public FormCategoryManagement()
         {
             InitializeComponent();
@@ -21,6 +31,10 @@ namespace MiniSupermarketWinForms
             btnDelete.Click += btnDelete_Click;
             btnSearch.Click += btnSearch_Click;
             btnLoad.Click += btnLoad_Click;
+
+            // Gắn sự kiện phân trang
+            btnPrev.Click += btnPrev_Click;
+            btnNext.Click += btnNext_Click;
 
             // Gắn sự kiện điều hướng chuyển Form
             if (btnCustomerManagement != null)
@@ -62,36 +76,50 @@ namespace MiniSupermarketWinForms
             await LoadDataAsync();
         }
 
-        // Tải danh sách nhóm hàng từ Backend API
+        // Tải danh sách nhóm hàng phân trang từ Backend API
         private async Task LoadDataAsync()
         {
             try
             {
                 AttachBearerToken();
+                string search = txtKeyword.Text.Trim();
+                if (search == "Nhập từ khóa..." || search == "Nhập tên nhóm hàng cần tìm...") search = "";
 
-                var categories =
-                    await ApiClientService.Client.GetFromJsonAsync<List<CategoryDto>>("categories");
+                string url = $"categories/paged?keyword={Uri.EscapeDataString(search)}&pageNumber={_currentPage}&pageSize={_pageSize}";
 
-                dgvCategories.DataSource = null;
-                dgvCategories.DataSource = categories;
-
-                // Tùy chỉnh tiêu đề và kích thước các cột hiển thị
-                if (dgvCategories.Columns["CategoryId"] != null)
+                var result = await ApiClientService.Client.GetFromJsonAsync<PagedViewResult<CategoryDto>>(url);
+                if (result != null)
                 {
-                    dgvCategories.Columns["CategoryId"].HeaderText = "Mã ID";
-                    dgvCategories.Columns["CategoryId"].Width = 80;
-                }
+                    _currentPage = result.CurrentPage;
+                    _totalPages = result.TotalPages == 0 ? 1 : result.TotalPages;
 
-                if (dgvCategories.Columns["CategoryName"] != null)
-                {
-                    dgvCategories.Columns["CategoryName"].HeaderText = "Tên Nhóm hàng";
-                    dgvCategories.Columns["CategoryName"].FillWeight = 45;
-                }
+                    dgvCategories.DataSource = null;
+                    dgvCategories.DataSource = result.Items;
 
-                if (dgvCategories.Columns["Description"] != null)
-                {
-                    dgvCategories.Columns["Description"].HeaderText = "Mô tả nhóm hàng";
-                    dgvCategories.Columns["Description"].FillWeight = 55;
+                    lblPaging.Text = $"Trang {_currentPage} / {_totalPages} (Tổng: {result.TotalItems} DM)";
+                    btnPrev.Enabled = _currentPage > 1;
+                    btnNext.Enabled = _currentPage < _totalPages;
+
+                    groupBox2.Text = $"Danh sách nhóm hàng ({result.TotalItems} danh mục)";
+
+                    // Tùy chỉnh tiêu đề và kích thước các cột hiển thị
+                    if (dgvCategories.Columns["CategoryId"] != null)
+                    {
+                        dgvCategories.Columns["CategoryId"].HeaderText = "Mã ID";
+                        dgvCategories.Columns["CategoryId"].Width = 80;
+                    }
+
+                    if (dgvCategories.Columns["CategoryName"] != null)
+                    {
+                        dgvCategories.Columns["CategoryName"].HeaderText = "Tên Nhóm hàng";
+                        dgvCategories.Columns["CategoryName"].FillWeight = 45;
+                    }
+
+                    if (dgvCategories.Columns["Description"] != null)
+                    {
+                        dgvCategories.Columns["Description"].HeaderText = "Mô tả nhóm hàng";
+                        dgvCategories.Columns["Description"].FillWeight = 55;
+                    }
                 }
             }
             catch (Exception ex)
@@ -105,9 +133,30 @@ namespace MiniSupermarketWinForms
             }
         }
 
+        // Sự kiện chuyển trang
+        private async void btnPrev_Click(object? sender, EventArgs e)
+        {
+            if (_currentPage > 1)
+            {
+                _currentPage--;
+                await LoadDataAsync();
+            }
+        }
+
+        private async void btnNext_Click(object? sender, EventArgs e)
+        {
+            if (_currentPage < _totalPages)
+            {
+                _currentPage++;
+                await LoadDataAsync();
+            }
+        }
+
         // Nút Tải lại danh sách
         private async void btnLoad_Click(object? sender, EventArgs e)
         {
+            txtKeyword.Clear();
+            _currentPage = 1;
             ClearInputs();
             await LoadDataAsync();
         }
@@ -288,25 +337,8 @@ namespace MiniSupermarketWinForms
         // ================= TÌM KIẾM NHÓM HÀNG =================
         private async void btnSearch_Click(object? sender, EventArgs e)
         {
-            string keyword = txtKeyword.Text.Trim();
-
-            if (string.IsNullOrEmpty(keyword) || keyword == "Nhập từ khóa...")
-            {
-                await LoadDataAsync();
-                return;
-            }
-
-            try
-            {
-                AttachBearerToken();
-                var result = await ApiClientService.Client.GetFromJsonAsync<List<CategoryDto>>($"categories/search?keyword={Uri.EscapeDataString(keyword)}");
-                dgvCategories.DataSource = null;
-                dgvCategories.DataSource = result;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi tìm kiếm: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            _currentPage = 1;
+            await LoadDataAsync();
         }
 
         // Chuyển sang Form Quản lý Khách hàng
@@ -333,7 +365,6 @@ namespace MiniSupermarketWinForms
             txtId.Clear();
             txtCategoryName.Clear();
             txtDescription.Clear();
-            txtKeyword.Clear();
         }
     }
 

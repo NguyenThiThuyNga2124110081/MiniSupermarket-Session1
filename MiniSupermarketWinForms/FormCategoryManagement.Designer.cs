@@ -36,6 +36,10 @@ namespace MiniSupermarketWinForms
             txtKeyword = new TextBox();
             groupBox2 = new GroupBox();
             dgvCategories = new DataGridView();
+            panelPaging = new Panel();
+            btnPrev = new Button();
+            lblPaging = new Label();
+            btnNext = new Button();
             groupBox3 = new GroupBox();
             btnDelete = new Button();
             btnUpdate = new Button();
@@ -132,7 +136,49 @@ namespace MiniSupermarketWinForms
             // groupBox2
             // 
             groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            // 
+            // panelPaging: Thanh điều hướng phân trang nhóm hàng
+            // 
+            panelPaging.BackColor = Color.FromArgb(245, 247, 250);
+            panelPaging.Dock = DockStyle.Bottom;
+            panelPaging.Height = 44;
+            panelPaging.Padding = new Padding(8, 6, 8, 6);
+
+            btnPrev.Location = new Point(10, 6);
+            btnPrev.Name = "btnPrev";
+            btnPrev.Size = new Size(130, 32);
+            btnPrev.Text = "⏪ Trang trước";
+            btnPrev.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnPrev.BackColor = Color.FromArgb(24, 30, 48);
+            btnPrev.ForeColor = Color.White;
+            btnPrev.FlatStyle = FlatStyle.Flat;
+            btnPrev.FlatAppearance.BorderSize = 0;
+            btnPrev.Enabled = false;
+
+            lblPaging.Location = new Point(155, 12);
+            lblPaging.Name = "lblPaging";
+            lblPaging.AutoSize = true;
+            lblPaging.Text = "Trang 1 / 1 (Tổng: 0 DM)";
+            lblPaging.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            lblPaging.ForeColor = Color.FromArgb(33, 37, 41);
+
+            btnNext.Location = new Point(370, 6);
+            btnNext.Name = "btnNext";
+            btnNext.Size = new Size(130, 32);
+            btnNext.Text = "Trang sau ⏩";
+            btnNext.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnNext.BackColor = Color.FromArgb(24, 30, 48);
+            btnNext.ForeColor = Color.White;
+            btnNext.FlatStyle = FlatStyle.Flat;
+            btnNext.FlatAppearance.BorderSize = 0;
+            btnNext.Enabled = false;
+
+            panelPaging.Controls.Add(btnPrev);
+            panelPaging.Controls.Add(lblPaging);
+            panelPaging.Controls.Add(btnNext);
+
             groupBox2.Controls.Add(dgvCategories);
+            groupBox2.Controls.Add(panelPaging);
             groupBox2.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
             groupBox2.Location = new Point(14, 85);
             groupBox2.Name = "groupBox2";
@@ -297,6 +343,8 @@ namespace MiniSupermarketWinForms
             Text = "Quản lý Danh mục Nhóm hàng";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            panelPaging.ResumeLayout(false);
+            panelPaging.PerformLayout();
             groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvCategories).EndInit();
             groupBox3.ResumeLayout(false);
@@ -314,6 +362,10 @@ namespace MiniSupermarketWinForms
         private Button btnProductManagement;
         private GroupBox groupBox2;
         private DataGridView dgvCategories;
+        private Panel panelPaging;
+        private Button btnPrev;
+        private Label lblPaging;
+        private Button btnNext;
         private GroupBox groupBox3;
         private Button btnUpdate;
         private Button btnAdd;

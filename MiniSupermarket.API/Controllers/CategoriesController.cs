@@ -17,6 +17,60 @@ namespace MiniSupermarket.API.Controllers
             _context = context;
         }
 
+        /*
+         * Họ tên sinh viên: Nguyễn Thị Thúy Nga
+         * Mã sinh viên: 2124110081
+         * Lớp: CCQ2411C
+         * Mô tả: Phân trang LINQ danh mục nhóm hàng kết hợp tìm kiếm gần đúng
+         */
+        // GET: api/categories/paged?keyword=...&pageNumber=1&pageSize=5
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetPagedCategories(
+            [FromQuery] string? keyword,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 5)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1 || pageSize > 50) pageSize = 5;
+
+            var query = _context.Categories
+                .AsNoTracking()
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                string search = keyword.Trim().ToLower();
+                query = query.Where(c => c.CategoryName.ToLower().Contains(search) 
+                                      || (c.Description != null && c.Description.ToLower().Contains(search)));
+            }
+
+            int totalItems = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            var items = await query
+                .OrderBy(c => c.CategoryId)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(c => new CategoryItemDto
+                {
+                    CategoryId = c.CategoryId,
+                    CategoryName = c.CategoryName,
+                    Description = c.Description
+                })
+                .ToListAsync();
+
+            var response = new PagedResult<CategoryItemDto>
+            {
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+                TotalItems = totalItems,
+                TotalPages = totalPages,
+                Items = items
+            };
+
+            return Ok(response);
+        }
+
         // 1. READ: Lấy toàn bộ danh mục từ SQL Server
         [HttpGet]
         public async Task<IActionResult> GetAll()
