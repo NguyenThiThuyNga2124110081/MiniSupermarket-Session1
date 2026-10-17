@@ -14,6 +14,7 @@ Lớp: CCQ2411C
 ---
 BUỔI 6: ENTITY FRAMEWORK CORE NÂNG CAO, PHÂN TRANG LINQ & TÍCH HỢP TOÀN DIỆN HỆ THỐNG POS CLIENT - SERVER
  📌 BÁO CÁO KẾT QUẢ THỰC HÀNH BUỔI 6
+
 🎯 Mục tiêu bài học
 
 | # | Kỹ năng | Kết quả đạt được |
