@@ -1,7 +1,7 @@
  🛒 HỆ THỐNG QUẢN LÝ BÁN LẺ & TỒN KHO SIÊU THỊ MINI (MINISUPERMARKET)
 
 Môn học: Lập trình Ứng dụng .NET Core (Mã môn: 229162)  
-Bài thực hành: BUỔI 6: ENTITY FRAMEWORK CORE NÂNG CAO, PHÂN TRANG LINQ & TÍCH HỢP TOÀN DIỆN HỆ THỐNG POS CLIENT - SERVER
+
 
 
 ---
@@ -15,6 +15,7 @@ Lớp: CCQ2411C
 
 ---
 BUỔI 6: ENTITY FRAMEWORK CORE NÂNG CAO, PHÂN TRANG LINQ & TÍCH HỢP TOÀN DIỆN HỆ THỐNG POS CLIENT - SERVER
+
  📌 BÁO CÁO KẾT QUẢ THỰC HÀNH BUỔI 6
 
 🎯 Mục tiêu bài học
