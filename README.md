@@ -1,5 +1,4 @@
-Markdown
-BUỔI 3: KẾT NỐI CƠ SỞ DỮ LIỆU LOCALDB, EF CORE MIGRATION & KIỂM THỬ BỀN VỮNG DỮ LIỆU
+## BUỔI 3: KẾT NỐI CƠ SỞ DỮ LIỆU LOCALDB, EF CORE MIGRATION & KIỂM THỬ BỀN VỮNG DỮ LIỆU
 
 ## 1. Thông Tin Sinh Viên
 * **Họ và tên:** Nguyễn Thị Thúy Nga
