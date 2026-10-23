@@ -72,7 +72,26 @@ Quản lý mã nguồn: Git và GitHub
 
 📂 Cấu trúc Solution
 
-MiniSupermarket.API/ │ ├── MiniSupermarket.API/ │ ├── Controllers/ │ ├── Models/ │ └── Program.cs │ ├── MiniSupermarketWinForms/ │ ├── Properties/ │ ├── References/ │ ├── App.config │ ├── FormCategoryManagement.cs │ ├── FormCategoryManagement.Designer.cs │ ├── FormCategoryManagement.resx │ ├── packages.config │ └── Program.cs │ ├── FormCategoryManagement/ ├── packages/ ├── MiniSupermarket.API.sln └── README.md
+```text
+MiniSupermarket.API/
+├── MiniSupermarket.API/
+│   ├── Controllers/
+│   ├── Models/
+│   └── Program.cs
+├── MiniSupermarketWinForms/
+│   ├── Properties/
+│   ├── References/
+│   ├── App.config
+│   ├── FormCategoryManagement.cs
+│   ├── FormCategoryManagement.Designer.cs
+│   ├── FormCategoryManagement.resx
+│   ├── packages.config
+│   └── Program.cs
+├── FormCategoryManagement/
+├── packages/
+├── MiniSupermarket.API.sln
+└── README.md
+```
 
 Lưu ý: Cấu trúc trên được trình bày theo các thành phần chính của solution. Tên hoặc vị trí một số thư mục có thể khác tùy theo cấu hình project trong Visual Studio.
 
