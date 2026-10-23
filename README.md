@@ -107,16 +107,18 @@ Nhập tài khoản/mật khẩu tương ứng để đăng nhập.
 
 Ứng dụng tự động lưu trữ Token vào SessionManager, giải phóng form đăng nhập và điều hướng sang form nghiệp vụ chính FormCategoryManagement.
 
-📂 Cấu Trúc Các Thành Phần Mới (Buổi 2)
-Plaintext
+## 📂 Cấu Trúc Các Thành Phần Mới (Buổi 2)
+
+```text
+MiniSupermarket/
 ├── MiniSupermarket.API/
 │   ├── Controllers/
-│   │   ├── AuthController.cs          # Endpoint xử lý đăng nhập & phát sinh JWT
-│   │   └── CategoriesController.cs    # Thêm [Authorize] & endpoint phân quyền theo Role
-│   └── Program.cs                     # Đăng ký dịch vụ xác thực JwtBearer Middleware
+│   │   ├── AuthController.cs          # Endpoint đăng nhập & cấp phát JWT
+│   │   └── CategoriesController.cs    # Thêm [Authorize] & phân quyền Role
+│   └── Program.cs                     # Đăng ký xác thực JwtBearer Middleware
 │
 └── MiniSupermarket.WinForms/
-    ├── FormLogin.cs                   # Giao diện đăng nhập Client
+    ├── FormLogin.cs                   # Màn hình đăng nhập Client
     ├── Program.cs                     # Cấu hình mở FormLogin đầu tiên
-    └── SessionManager.cs              # Quản lý lưu trữ JwtToken và Role phiên hiện tại
-
+    └── SessionManager.cs              # Lưu trữ JwtToken và Role phiên hiện tại
+```
