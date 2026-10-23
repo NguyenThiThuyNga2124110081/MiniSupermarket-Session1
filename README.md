@@ -98,7 +98,7 @@ Trong cửa sổ Solution Explorer, nhấp chuột phải vào dự án MiniSupe
 
 Nhấn phím Ctrl + F5 (hoặc F5) để chạy Backend.
 
-Trình duyệt sẽ tự động mở giao diện Swagger UI tại đường dẫn:https://localhost:7123/swagger/index.html (hoặc cổng PORT tương ứng trên máy của bạn).
+Trình duyệt sẽ tự động mở giao diện Swagger UI tại đường dẫn:https://localhost:7099/swagger/index.html (hoặc cổng PORT tương ứng trên máy của bạn).
 
 Bạn có thể kiểm thử trực tiếp các endpoint GET /api/Categories, GET /api/Products ngay trên Swagger.
 
@@ -106,7 +106,7 @@ Bạn có thể kiểm thử trực tiếp các endpoint GET /api/Categories, GE
 Đảm bảo cổng Port trong file ApiClientService.cs (hoặc cấu hình HttpClient của WinForms) đã trùng khớp với Port của Backend đang chạy:
 
 C#
-BaseAddress = new Uri("https://localhost:7123/api/")
+BaseAddress = new Uri("https://localhost:7099/api/")
 Chuột phải vào project MiniSupermarket.WinForms > Chọn Debug > Start New Instance (hoặc chọn Set as Startup Project rồi bấm F5).
 
 Màn hình đăng nhập (FormLogin) sẽ xuất hiện:
