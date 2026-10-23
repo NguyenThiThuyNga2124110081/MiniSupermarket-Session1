@@ -50,7 +50,7 @@ Chuột phải vào MiniSupermarket.API > chọn Set as Startup Project.
 
 Nhấn F5 hoặc Ctrl + F5 để khởi chạy.
 
-Trình duyệt tự động mở giao diện Swagger UI tại địa chỉ: https://localhost:7123/swagger (Lưu ý kiểm tra đúng số cổng PORT máy bạn đang chạy).
+Trình duyệt tự động mở giao diện Swagger UI tại địa chỉ: https://localhost:7099/swagger (Lưu ý kiểm tra đúng số cổng PORT máy bạn đang chạy).
 
 Bước 2: Kiểm chứng bảo mật với Swagger UI
 Thử nghiệm gọi API khi chưa đăng nhập (401 Unauthorized):
