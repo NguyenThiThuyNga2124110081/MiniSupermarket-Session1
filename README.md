@@ -1,10 +1,13 @@
 # 🛒 HỆ THỐNG QUẢN LÝ BÁN LẺ & TỒN KHO SIÊU THỊ MINI (MINISUPERMARKET)
 
 > **Môn học:** Lập trình Ứng dụng .NET Core (Mã môn: 229162)
-> **Thông tin sinh viên:** 
+
+ **Thông tin sinh viên:** 
 > **Họ tên:** Nguyễn Thị Thúy Nga  
 > **MSSV:** 2124110081  
-> **Lớp:** CCQ2411C  
+> **Lớp:** CCQ2411C
+
+
 > **Kiến trúc:** Client - Server (RESTful Web API + Windows Forms Client)
 
 ---
