@@ -1,9 +1,9 @@
-Buổi 2: Bảo Mật & Phân Quyền JWT Cho Hệ Thống MiniSupermarket
+BUỔI 2: BẢO MẬT & PHÂN QUYỀN JWT CHO WEB API
 
 Dự án mở rộng hệ thống **MiniSupermarket** với kiến trúc phân tầng Client - Server: tích hợp cơ chế xác thực không trạng thái (**Stateless Authentication**) bằng **JWT (JSON Web Token)**, bảo vệ các RESTful Web API và xây dựng luồng đăng nhập, phân quyền người dùng trên ứng dụng WinForms Client.
 
 ---
-TÊN TÁC GIẢ
+Thông tin sinh viên
 * **Họ và tên:** Nguyễn Thị Thúy Nga
 * **MSSV:** 2124110081
 * **Lớp:** CCQ2411C
