@@ -1,166 +1,240 @@
-BUỔI 2: BẢO MẬT \& PHÂN QUYỀN JWT CHO WEB API
+🛒 HỆ THỐNG QUẢN LÝ SIÊU THỊ MINI (MINISUPERMARKET SYSTEM)
 
+📚 Thông tin bài thực hành
 
-Thông tin sinh viên
+Môn học: Lập trình ứng dụng với .NET
 
-\- \*\*Họ và tên:\*\* Nguyễn Thị Thúy Nga
+Mã môn học: 229162
 
-\- \*\*MSSV:\*\* 2124110081
+Buổi thực hành: Buổi 1 – CRUD Nhóm hàng MiniSupermarket
 
-\- \*\*Lớp:\*\* CCQ2411C
+Đề tài: Xây dựng hệ thống quản lý siêu thị mini
 
+📝 Giới thiệu
 
+MiniSupermarket System là hệ thống quản lý siêu thị mini được xây dựng bằng ngôn ngữ C# và nền tảng .NET.
 
-\---
+Hệ thống hỗ trợ quản lý các nhóm hàng trong siêu thị, bao gồm:
 
+Hiển thị danh sách nhóm hàng.
 
+Thêm nhóm hàng mới.
 
-1. Mục tiêu
+Cập nhật thông tin nhóm hàng.
 
-Buổi 2 nâng cấp dự án MiniSupermarket từ chức năng CRUD của Buổi 1 lên hệ thống có \*\*đăng nhập, xác thực và phân quyền bằng JWT\*\*.
+Xóa nhóm hàng.
 
+Tìm kiếm nhóm hàng.
 
+Kết nối giữa ứng dụng Windows Forms và Web API.
 
-\---
+Dự án gồm hai phần chính: Backend Web API và Frontend Windows Forms.
 
+🏗️ Kiến trúc hệ thống
 
- 2. Nội dung đã bổ sung
+Backend – MiniSupermarket.API
+Backend được xây dựng bằng ASP.NET Core Web API, có nhiệm vụ:
 
+Tiếp nhận yêu cầu từ ứng dụng giao diện.
 
+Xử lý các chức năng CRUD nhóm hàng.
 
- Backend - MiniSupermarket.API
+Cung cấp API lấy, thêm, sửa, xóa và tìm kiếm dữ liệu.
 
-\- Cài đặt package hỗ trợ JWT Authentication.
+Quản lý và xử lý dữ liệu của hệ thống.
 
-\- Tạo `AuthController` để xử lý đăng nhập và cấp JWT Token.
+Frontend – MiniSupermarketWinForms
+Frontend được xây dựng bằng Windows Forms, có nhiệm vụ:
 
-\- Cấu hình JWT Authentication trong `Program.cs`.
+Hiển thị giao diện quản lý nhóm hàng.
 
-\- Sử dụng `\[Authorize]` để bảo vệ API.
+Gửi yêu cầu đến Backend Web API.
 
-\- Sử dụng `\[Authorize(Roles = "...")]` để phân quyền Admin và Cashier.
+Hiển thị danh sách nhóm hàng.
 
-\- Kiểm tra API khi chưa đăng nhập và khi đăng nhập bằng các quyền khác nhau.
+Cho phép thêm, sửa, xóa và tìm kiếm nhóm hàng.
 
+🛠️ Công nghệ sử dụng
 
+Ngôn ngữ lập trình: C#
 
- WinForms - MiniSupermarketWinForms
+Nền tảng: .NET 8.0
 
-\- Tạo `FormLogin` để đăng nhập.
+Backend: ASP.NET Core Web API
 
-\- Tạo `SessionManager` để lưu JWT Token và Role của người dùng.
+Frontend: Windows Forms
 
-\- Cập nhật `ApiClientService` để gửi Bearer Token khi gọi API.
+Công cụ phát triển: Visual Studio
 
-\- Cập nhật `FormCategoryManagement` để gọi API có xác thực.
+Kiểm tra API: Swagger
 
-\- Thay đổi màn hình khởi chạy thành `FormLogin`.
+Quản lý mã nguồn: Git và GitHub
 
+📂 Cấu trúc Solution
 
+MiniSupermarket.API/ │ ├── MiniSupermarket.API/ │ ├── Controllers/ │ ├── Models/ │ └── Program.cs │ ├── MiniSupermarketWinForms/ │ ├── Properties/ │ ├── References/ │ ├── App.config │ ├── FormCategoryManagement.cs │ ├── FormCategoryManagement.Designer.cs │ ├── FormCategoryManagement.resx │ ├── packages.config │ └── Program.cs │ ├── FormCategoryManagement/ ├── packages/ ├── MiniSupermarket.API.sln └── README.md
 
-\---
+Lưu ý: Cấu trúc trên được trình bày theo các thành phần chính của solution. Tên hoặc vị trí một số thư mục có thể khác tùy theo cấu hình project trong Visual Studio.
 
+⚙️ Chức năng chính
 
+Chức năng
 
-3. Tài khoản kiểm thử
+Mô tả
 
+Create
 
+Thêm nhóm hàng mới
 
-| Tài khoản | Mật khẩu | Quyền |
+Read
 
-| :--- | :--- | :--- |
+Hiển thị danh sách nhóm hàng
 
-| `admin` | `123` | Admin |
+Update
 
-| `cashier` | `123` | Cashier |
+Cập nhật thông tin nhóm hàng
 
+Delete
 
+Xóa nhóm hàng
 
-\---
+Search
 
+Tìm kiếm nhóm hàng
 
+▶️ Hướng dẫn chạy chương trình
 
-4. Kết quả
+Bước 1: Mở solution
 
-Sau Buổi 2, hệ thống có thêm:
+Mở Visual Studio.
 
-\- Đăng nhập bằng tài khoản.
+Chọn Open a project or solution.
 
-\- Cấp và lưu JWT Token.
+Mở file MiniSupermarket.API.sln.
 
-\- Xác thực người dùng bằng Bearer Token.
+Bước 2: Chạy Backend
 
-\- Phân quyền Admin và Cashier.
+Trong Solution Explorer, chọn project MiniSupermarket.API.
 
-\- Bảo vệ các API bằng `\[Authorize]`.
+Nhấn chuột phải và chọn Set as Startup Project.
 
-\- WinForms có màn hình đăng nhập và gửi Token khi gọi API.
+Nhấn F5 hoặc Start.
 
+Backend sẽ chạy tại cổng được cấu hình trong project.
 
+Bước 3: Kiểm tra API bằng Swagger
 
-\---
+Swagger UI của project:
 
+Swagger UI
 
+Có thể kiểm tra các API:
 
-5. So với Buổi 1
+Lấy danh sách nhóm hàng.
 
-\*\*Buổi 1:\*\* Tập trung xây dựng chức năng CRUD Nhóm hàng.
+Lấy thông tin một nhóm hàng.
 
+Thêm nhóm hàng.
 
+Cập nhật nhóm hàng.
 
-\*\*Buổi 2:\*\* Bổ sung bảo mật cho hệ thống gồm:
+Xóa nhóm hàng.
 
-\- Đăng nhập.
+Tìm kiếm nhóm hàng.
 
-\- JWT Authentication.
+Bước 4: Chạy Windows Forms
 
-\- Authorization.
+Chọn project MiniSupermarketWinForms.
 
-\- Phân quyền Admin/Cashier.
+Nhấn chuột phải và chọn Set as Startup Project.
 
+Nhấn F5 để chạy giao diện.
 
+Kiểm tra địa chỉ API trong phần cấu hình của ứng dụng.
 
-\---
+Đảm bảo địa chỉ và cổng Backend trùng với địa chỉ API đang chạy.
 
+Chạy đồng thời Backend và Windows Forms
 
+Nhấn chuột phải vào Solution.
 
-6. Công nghệ sử dụng
+Chọn Set Startup Projects.
 
-\- C#
+Chọn Multiple startup projects.
 
-\- .NET 8.0
+Đặt MiniSupermarket.API và MiniSupermarketWinForms ở chế độ Start.
 
-\- ASP.NET Core Web API
+Nhấn Apply và OK.
 
-\- Windows Forms
+Nhấn F5.
 
-\- JWT Authentication
+🧪 Kiểm thử chức năng
 
-\- Visual Studio 2022
+Thêm nhóm hàng
 
-\- Git/GitHub
+Mở màn hình quản lý nhóm hàng.
 
-\- Swagger
+Nhập thông tin nhóm hàng.
 
+Nhấn nút Thêm.
 
+Kiểm tra nhóm hàng mới trong danh sách.
 
-\---
+Sửa nhóm hàng
 
+Chọn nhóm hàng cần sửa.
 
+Thay đổi thông tin.
 
- 7. API kiểm tra
+Nhấn Sửa hoặc Cập nhật.
 
+Kiểm tra dữ liệu sau khi cập nhật.
 
+Xóa nhóm hàng
 
-Swagger:
+Chọn nhóm hàng cần xóa.
 
-```text
+Nhấn Xóa.
 
-https://localhost:7099/swagger/index.html
+Xác nhận thao tác nếu có thông báo.
 
+Kiểm tra nhóm hàng đã được xóa.
 
+Tìm kiếm nhóm hàng
 
-8. GitHub
+Nhập từ khóa tìm kiếm.
+
+Nhấn Tìm kiếm.
+
+Kiểm tra danh sách kết quả.
+
+📌 Kết quả đạt được
+
+Tạo được solution MiniSupermarket bằng C# .NET.
+
+Xây dựng được Backend ASP.NET Core Web API.
+
+Xây dựng được giao diện Windows Forms.
+
+Thực hiện được CRUD nhóm hàng.
+
+Kiểm tra API bằng Swagger.
+
+Kết nối Frontend với Backend.
+
+Sử dụng Git để quản lý mã nguồn.
+
+Đưa source code lên GitHub.
+
+📦 Các lệnh Git đã sử dụng
+
+git init git add . git commit -m "Hoàn thành bài thực hành Buổi 1: CRUD Nhóm hàng MiniSupermarket" git branch -M main git remote add origin https://github.com/NguyenThiThuyNga2124110081/MiniSupermarket-Session1.git git push -u origin main
+
+Cập nhật README lên GitHub:
+
+git add README.md git commit -m "Thêm README.md" git push
+
+ GitHub
 
 Repository:
 
