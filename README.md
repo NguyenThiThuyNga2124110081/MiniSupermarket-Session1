@@ -1,4 +1,5 @@
-# 🛒 HỆ THỐNG QUẢN LÝ BÁN LẺ & TỒN KHO SIÊU THỊ MINI (MINISUPERMARKET)
+# 🛒 BUỔI 4: THIẾT KẾ KIẾN TRÚC GIAO DIỆN WINFORMS SHELL (SIDEBAR & MAIN WORKSPACE) VÀ ĐIỀU HƯỚNG PHÂN QUYỀN (ADMIN / CASHIER / WAREHOUSE)
+
 
 > **Môn học:** Lập trình Ứng dụng .NET Core (Mã môn: 229162)
 
