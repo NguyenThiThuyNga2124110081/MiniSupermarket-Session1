@@ -1,244 +1,121 @@
-🛒 HỆ THỐNG QUẢN LÝ SIÊU THỊ MINI (MINISUPERMARKET SYSTEM)
+Buổi 2: Bảo Mật & Phân Quyền JWT Cho Hệ Thống MiniSupermarket
 
-📚 Thông tin bài thực hành
+Dự án mở rộng hệ thống **MiniSupermarket** với kiến trúc phân tầng Client - Server: tích hợp cơ chế xác thực không trạng thái (**Stateless Authentication**) bằng **JWT (JSON Web Token)**, bảo vệ các RESTful Web API và xây dựng luồng đăng nhập, phân quyền người dùng trên ứng dụng WinForms Client.
 
-Môn học: Lập trình ứng dụng với .NET
+---
+TÊN TÁC GIẢ
+* **Họ và tên:** Nguyễn Thị Thúy Nga
+* **MSSV:** 2124110081
+* **Lớp:** CCQ2411C
+🎯 Mục Tiêu Đạt Được
 
-Mã môn học: 229162
+- **Kiến trúc Stateless:** Sử dụng JWT để định danh người dùng qua các Claim (Username, Role) mà không tốn tài nguyên lưu Session trên RAM máy chủ.
+- **Bảo mật Backend:** Thiết lập Middleware xác thực JWT Bearer, phân quyền truy cập endpoint bằng thuộc tính `[Authorize]` và `[Authorize(Roles = "...")]`.
+- **Tích hợp Client:** Xây dựng màn hình đăng nhập `FormLogin`, lưu trữ phiên làm việc qua `SessionManager` và cấu hình `HttpClient` đính kèm Header `Authorization: Bearer <token>` khi gửi request.
 
-Buổi thực hành: Buổi 1 – CRUD Nhóm hàng MiniSupermarket
+---
 
-Đề tài: Xây dựng hệ thống quản lý siêu thị mini
+🛠 Yêu Cầu & Thư Viện Sử Dụng
 
-📝 Giới thiệu
+- **Môi trường:** .NET 8.0 SDK (hoặc .NET 10.0), Visual Studio 2022 trở lên.
+- **Gói NuGet Backend (`MiniSupermarket.API`):**
+  - `System.IdentityModel.Tokens.Jwt`
+  - `Microsoft.AspNetCore.Authentication.JwtBearer`
 
-MiniSupermarket System là hệ thống quản lý siêu thị mini được xây dựng bằng ngôn ngữ C# và nền tảng .NET.
+---
 
-Hệ thống hỗ trợ quản lý các nhóm hàng trong siêu thị, bao gồm:
+👥 Danh Sách Tài Khoản Thử Nghiệm
 
-Hiển thị danh sách nhóm hàng.
+Hệ thống mẫu cấp sẵn 2 tài khoản phân cấp vai trò:
 
-Thêm nhóm hàng mới.
+| Tài khoản (Username) | Mật khẩu (Password) | Phân quyền (Role) | Phạm vi truy cập kiểm tra |
+| :--- | :--- | :--- | :--- |
+| `admin` | `123456` | **Admin** | Toàn quyền hệ thống, danh mục, màn POS và `admin-dashboard` |
+| `cashier` | `123456` | **Cashier** | Xem danh mục, thao tác màn POS (`staff-pos`). Bị chặn (`403 Forbidden`) tại `admin-dashboard` |
 
-Cập nhật thông tin nhóm hàng.
+---
 
-Xóa nhóm hàng.
+🚀 Hướng Dẫn Cài Đặt & Chạy Ứng Dụng
 
-Tìm kiếm nhóm hàng.
+Bước 1: Khởi động Backend (MiniSupermarket.API)
 
-Kết nối giữa ứng dụng Windows Forms và Web API.
+1. Mở Solution bằng Visual Studio.
+2. Kiểm tra tệp cấu hình `appsettings.json` tại project `MiniSupermarket.API`, đảm bảo chuỗi Secret Key đã được khai báo:
+   ```json
+   "JwtSettings": {
+     "Secret": "SupermarketSecretKeyDoAnMonHoc2026SecureString!!"
+   }
+Chuột phải vào MiniSupermarket.API > chọn Set as Startup Project.
 
-Dự án gồm hai phần chính: Backend Web API và Frontend Windows Forms.
+Nhấn F5 hoặc Ctrl + F5 để khởi chạy.
 
-🏗️ Kiến trúc hệ thống
+Trình duyệt tự động mở giao diện Swagger UI tại địa chỉ: https://localhost:7123/swagger (Lưu ý kiểm tra đúng số cổng PORT máy bạn đang chạy).
 
-Backend – MiniSupermarket.API
-Backend được xây dựng bằng ASP.NET Core Web API, có nhiệm vụ:
+Bước 2: Kiểm chứng bảo mật với Swagger UI
+Thử nghiệm gọi API khi chưa đăng nhập (401 Unauthorized):
 
-Tiếp nhận yêu cầu từ ứng dụng giao diện.
+Chọn GET /api/categories > Bấm Try it out > Execute.
 
-Xử lý các chức năng CRUD nhóm hàng.
+Phản hồi nhận được: Mã lỗi 401 Unauthorized.
 
-Cung cấp API lấy, thêm, sửa, xóa và tìm kiếm dữ liệu.
+Đăng nhập lấy Token:
 
-Quản lý và xử lý dữ liệu của hệ thống.
+Chọn POST /api/auth/login > Bấm Try it out.
 
-Frontend – MiniSupermarketWinForms
-Frontend được xây dựng bằng Windows Forms, có nhiệm vụ:
+Điền JSON đăng nhập (ví dụ tài khoản cashier):
 
-Hiển thị giao diện quản lý nhóm hàng.
+JSON
+{
+  "username": "cashier",
+  "password": "123456"
+}
+Nhấn Execute, copy toàn bộ chuỗi ký tự trong trường "token" ở khung kết quả.
 
-Gửi yêu cầu đến Backend Web API.
+Gắn Token vào Swagger:
 
-Hiển thị danh sách nhóm hàng.
+Kéo lên đầu trang, bấm vào nút Authorize (biểu tượng ổ khóa màu xanh lá).
 
-Cho phép thêm, sửa, xóa và tìm kiếm nhóm hàng.
+Nhập chuỗi theo cú pháp:
 
-🛠️ Công nghệ sử dụng
+Plaintext
+Bearer <chuỗi_token_vừa_copy>
+Bấm Authorize > Close.
 
-Ngôn ngữ lập trình: C#
+Kiểm tra phân quyền Role (403 Forbidden vs 200 OK):
 
-Nền tảng: .NET 8.0
+Gọi GET /api/categories/staff-pos ➔ Trả về 200 OK (Cả Admin và Cashier đều có quyền).
 
-Backend: ASP.NET Core Web API
+Gọi GET /api/categories/admin-dashboard với token Cashier ➔ Trả về 403 Forbidden (Bị từ chối vì thiếu quyền Admin).
 
-Frontend: Windows Forms
+Bước 3: Cấu hình và chạy WinForms Client
+Mở file FormLogin.cs và ApiClientService.cs (hoặc nơi cấu hình HttpClient), đối chiếu cổng BaseAddress khớp với cổng Backend API đang chạy:
 
-Công cụ phát triển: Visual Studio
+C#
+BaseAddress = new Uri("https://localhost:7099/api/")
+Thiết lập cho phép chạy song song cả 2 project hoặc khởi chạy độc lập:
 
-Kiểm tra API: Swagger
+Cách 1: Chạy API trước bằng Ctrl + F5, sau đó chuột phải vào MiniSupermarket.WinForms > chọn Debug > Start New Instance.
 
-Quản lý mã nguồn: Git và GitHub
+Cách 2: Chuột phải vào Solution > Configure Startup Projects... > chọn Multiple startup projects > Chọn Action Start cho cả hai project MiniSupermarket.API và MiniSupermarket.WinForms.
 
-📂 Cấu trúc Solution
-
-MiniSupermarket.API/ │ ├── MiniSupermarket.API/ │ ├── Controllers/ │ ├── Models/ │ └── Program.cs │ ├── MiniSupermarketWinForms/ │ ├── Properties/ │ ├── References/ │ ├── App.config │ ├── FormCategoryManagement.cs │ ├── FormCategoryManagement.Designer.cs │ ├── FormCategoryManagement.resx │ ├── packages.config │ └── Program.cs │ ├── FormCategoryManagement/ ├── packages/ ├── MiniSupermarket.API.sln └── README.md
-
-Lưu ý: Cấu trúc trên được trình bày theo các thành phần chính của solution. Tên hoặc vị trí một số thư mục có thể khác tùy theo cấu hình project trong Visual Studio.
-
-⚙️ Chức năng chính
-
-Chức năng
-
-Mô tả
-
-Create
-
-Thêm nhóm hàng mới
-
-Read
-
-Hiển thị danh sách nhóm hàng
-
-Update
-
-Cập nhật thông tin nhóm hàng
-
-Delete
-
-Xóa nhóm hàng
-
-Search
-
-Tìm kiếm nhóm hàng
-
-▶️ Hướng dẫn chạy chương trình
-
-Bước 1: Mở solution
-
-Mở Visual Studio.
-
-Chọn Open a project or solution.
-
-Mở file MiniSupermarket.API.sln.
-
-Bước 2: Chạy Backend
-
-Trong Solution Explorer, chọn project MiniSupermarket.API.
-
-Nhấn chuột phải và chọn Set as Startup Project.
-
-Nhấn F5 hoặc Start.
-
-Backend sẽ chạy tại cổng được cấu hình trong project.
-
-Bước 3: Kiểm tra API bằng Swagger
-
-Swagger UI của project:
-
-Swagger UI
-
-Có thể kiểm tra các API:
-
-Lấy danh sách nhóm hàng.
-
-Lấy thông tin một nhóm hàng.
-
-Thêm nhóm hàng.
-
-Cập nhật nhóm hàng.
-
-Xóa nhóm hàng.
-
-Tìm kiếm nhóm hàng.
-
-Bước 4: Chạy Windows Forms
-
-Chọn project MiniSupermarketWinForms.
-
-Nhấn chuột phải và chọn Set as Startup Project.
-
-Nhấn F5 để chạy giao diện.
-
-Kiểm tra địa chỉ API trong phần cấu hình của ứng dụng.
-
-Đảm bảo địa chỉ và cổng Backend trùng với địa chỉ API đang chạy.
-
-Chạy đồng thời Backend và Windows Forms
-
-Nhấn chuột phải vào Solution.
-
-Chọn Set Startup Projects.
-
-Chọn Multiple startup projects.
-
-Đặt MiniSupermarket.API và MiniSupermarketWinForms ở chế độ Start.
-
-Nhấn Apply và OK.
-
-Nhấn F5.
-
-🧪 Kiểm thử chức năng
-
-Thêm nhóm hàng
-
-Mở màn hình quản lý nhóm hàng.
-
-Nhập thông tin nhóm hàng.
-
-Nhấn nút Thêm.
-
-Kiểm tra nhóm hàng mới trong danh sách.
-
-Sửa nhóm hàng
-
-Chọn nhóm hàng cần sửa.
-
-Thay đổi thông tin.
-
-Nhấn Sửa hoặc Cập nhật.
-
-Kiểm tra dữ liệu sau khi cập nhật.
-
-Xóa nhóm hàng
-
-Chọn nhóm hàng cần xóa.
-
-Nhấn Xóa.
-
-Xác nhận thao tác nếu có thông báo.
-
-Kiểm tra nhóm hàng đã được xóa.
-
-Tìm kiếm nhóm hàng
-
-Nhập từ khóa tìm kiếm.
-
-Nhấn Tìm kiếm.
-
-Kiểm tra danh sách kết quả.
-
-📌 Kết quả đạt được
-
-Tạo được solution MiniSupermarket bằng C# .NET.
-
-Xây dựng được Backend ASP.NET Core Web API.
-
-Xây dựng được giao diện Windows Forms.
-
-Thực hiện được CRUD nhóm hàng.
-
-Kiểm tra API bằng Swagger.
-
-Kết nối Frontend với Backend.
-
-Sử dụng Git để quản lý mã nguồn.
-
-Đưa source code lên GitHub.
-
-📦 Các lệnh Git đã sử dụng
-
-git init git add . git commit -m "Hoàn thành bài thực hành Buổi 1: CRUD Nhóm hàng MiniSupermarket" git branch -M main git remote add origin https://github.com/NguyenThiThuyNga2124110081/MiniSupermarket-Session1.git git push -u origin main
-
-Cập nhật README lên GitHub:
-
-git add README.md git commit -m "Thêm README.md" git push
-
- GitHub
-
-Repository:
-
-
-
-https://github.com/NguyenThiThuyNga2124110081/MiniSupermarket-Session1
+Khi giao diện WinForms khởi chạy:
+
+Màn hình FormLogin hiển thị đầu tiên.
+
+Nhập tài khoản/mật khẩu tương ứng để đăng nhập.
+
+Ứng dụng tự động lưu trữ Token vào SessionManager, giải phóng form đăng nhập và điều hướng sang form nghiệp vụ chính FormCategoryManagement.
+
+📂 Cấu Trúc Các Thành Phần Mới (Buổi 2)
+Plaintext
+├── MiniSupermarket.API/
+│   ├── Controllers/
+│   │   ├── AuthController.cs          # Endpoint xử lý đăng nhập & phát sinh JWT
+│   │   └── CategoriesController.cs    # Thêm [Authorize] & endpoint phân quyền theo Role
+│   └── Program.cs                     # Đăng ký dịch vụ xác thực JwtBearer Middleware
+│
+└── MiniSupermarket.WinForms/
+    ├── FormLogin.cs                   # Giao diện đăng nhập Client
+    ├── Program.cs                     # Cấu hình mở FormLogin đầu tiên
+    └── SessionManager.cs              # Quản lý lưu trữ JwtToken và Role phiên hiện tại
 
