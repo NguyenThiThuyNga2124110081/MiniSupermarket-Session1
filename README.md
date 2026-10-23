@@ -244,6 +244,6 @@ https://github.com/NguyenThiThuyNga2124110081/MiniSupermarket-Session1
 
 
  TÊN TÁC GIẢ
-Họ và tên: Nguyễn Thị Thúy Nga
-MSSV: 2124110081
-Lớp: CCQ2411C
+* **Họ và tên:** Nguyễn Thị Thúy Nga
+* **MSSV:** 2124110081
+* **Lớp:** CCQ2411C
