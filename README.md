@@ -132,8 +132,8 @@ MiniSupermarket.WinForms: Chọn Action là Start.
 
 Nhấn Apply > OK. Giờ đây bạn chỉ cần nhấn F5 một lần duy nhất.
 
-📂 4. CẤU TRÚC THƯ MỤC DỰ ÁN
-Plaintext
+##📂 4. CẤU TRÚC THƯ MỤC DỰ ÁN
+```Plaintext
 MiniSupermarket/
 ├── .gitignore                         # Tệp cấu hình loại trừ file rác (bin, obj, node_modules)
 ├── README.md                          # Tài liệu hướng dẫn đồ án
@@ -163,3 +163,4 @@ MiniSupermarket/
     ├── FormUserManagement.cs          # Quản trị danh sách nhân sự & cấp quyền
     ├── SessionManager.cs              # Quản lý phiên làm việc, lưu trữ JwtToken và CurrentRole
     └── ApiClientService.cs            # Cấu hình HttpClient tập trung gọi sang Backend API
+```
