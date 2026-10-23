@@ -1,7 +1,8 @@
  🛒 HỆ THỐNG QUẢN LÝ BÁN LẺ & TỒN KHO SIÊU THỊ MINI (MINISUPERMARKET)
 
 Môn học: Lập trình Ứng dụng .NET Core (Mã môn: 229162)  
-Bài thực hành: Buổi 04 - Thiết kế Kiến trúc Giao diện WinForms Shell & Điều hướng Phân quyền (RBAC)
+Bài thực hành: BUỔI 6: ENTITY FRAMEWORK CORE NÂNG CAO, PHÂN TRANG LINQ & TÍCH HỢP TOÀN DIỆN HỆ THỐNG POS CLIENT - SERVER
+
 
 ---
 
