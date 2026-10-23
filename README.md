@@ -6,9 +6,9 @@ Bài thực hành: Buổi 05 - ADO.NET Nâng cao, Stored Procedure & Giao dịch
 ---
 
 👤 THÔNG TIN SINH VIÊN
-Họ và tên: Nguyễn Thị Thúy Nga  
-Mã số sinh viên: 2124110081  
-Lớp: CCQ2411C  
+* **Họ và tên:** Nguyễn Thị Thúy Nga  
+* **Mã số sinh viên:** 2124110081  
+* **Lớp:** CCQ2411C  
 
 ---
 
