@@ -1,8 +1,7 @@
-\# BUỔI 2: BẢO MẬT \& PHÂN QUYỀN JWT CHO WEB API
+BUỔI 2: BẢO MẬT \& PHÂN QUYỀN JWT CHO WEB API
 
 
-
-\## Thông tin sinh viên
+Thông tin sinh viên
 
 \- \*\*Họ và tên:\*\* Nguyễn Thị Thúy Nga
 
@@ -16,7 +15,7 @@
 
 
 
-\## 1. Mục tiêu
+1. Mục tiêu
 
 Buổi 2 nâng cấp dự án MiniSupermarket từ chức năng CRUD của Buổi 1 lên hệ thống có \*\*đăng nhập, xác thực và phân quyền bằng JWT\*\*.
 
@@ -25,12 +24,11 @@ Buổi 2 nâng cấp dự án MiniSupermarket từ chức năng CRUD của Buổ
 \---
 
 
-
-\## 2. Nội dung đã bổ sung
-
+ 2. Nội dung đã bổ sung
 
 
-\### Backend - MiniSupermarket.API
+
+ Backend - MiniSupermarket.API
 
 \- Cài đặt package hỗ trợ JWT Authentication.
 
@@ -46,7 +44,7 @@ Buổi 2 nâng cấp dự án MiniSupermarket từ chức năng CRUD của Buổ
 
 
 
-\### WinForms - MiniSupermarketWinForms
+ WinForms - MiniSupermarketWinForms
 
 \- Tạo `FormLogin` để đăng nhập.
 
@@ -64,7 +62,7 @@ Buổi 2 nâng cấp dự án MiniSupermarket từ chức năng CRUD của Buổ
 
 
 
-\## 3. Tài khoản kiểm thử
+3. Tài khoản kiểm thử
 
 
 
@@ -82,7 +80,7 @@ Buổi 2 nâng cấp dự án MiniSupermarket từ chức năng CRUD của Buổ
 
 
 
-\## 4. Kết quả
+4. Kết quả
 
 Sau Buổi 2, hệ thống có thêm:
 
@@ -104,7 +102,7 @@ Sau Buổi 2, hệ thống có thêm:
 
 
 
-\## 5. So với Buổi 1
+5. So với Buổi 1
 
 \*\*Buổi 1:\*\* Tập trung xây dựng chức năng CRUD Nhóm hàng.
 
@@ -126,7 +124,7 @@ Sau Buổi 2, hệ thống có thêm:
 
 
 
-\## 6. Công nghệ sử dụng
+6. Công nghệ sử dụng
 
 \- C#
 
@@ -150,7 +148,7 @@ Sau Buổi 2, hệ thống có thêm:
 
 
 
-\## 7. API kiểm tra
+ 7. API kiểm tra
 
 
 
@@ -162,7 +160,7 @@ https://localhost:7099/swagger/index.html
 
 
 
-\## 8. GitHub
+8. GitHub
 
 Repository:
 
