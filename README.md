@@ -1,26 +1,25 @@
- 🛒 HỆ THỐNG QUẢN LÝ BÁN LẺ & TỒN KHO SIÊU THỊ MINI (MINISUPERMARKET)
+# 🛒 HỆ THỐNG QUẢN LÝ BÁN LẺ & TỒN KHO SIÊU THỊ MINI (MINISUPERMARKET)
 
-Môn học: Lập trình Ứng dụng .NET Core (Mã môn: 229162)  
-
-
+> 📘 **Môn học:** Lập trình Ứng dụng .NET Core (Mã môn: 229162)
 
 ---
 
-👤 THÔNG TIN SINH VIÊN
+## 👤 THÔNG TIN SINH VIÊN
 
-Họ và tên: Nguyễn Thị Thúy Nga  
-Mã số sinh viên: 2124110081  
-Lớp: CCQ2411C  
-Đề tài: Tiệm Trà chanh & Tạp hóa vặt Chill Store
+- 👩‍🎓 **Họ và tên:** Nguyễn Thị Thúy Nga
+- 🪪 **Mã số sinh viên:** 2124110081
+- 🏫 **Lớp:** CCQ2411C
+- 🍋 **Đề tài:** Tiệm Trà chanh & Tạp hóa vặt Chill Store
 
 ---
-BUỔI 6: ENTITY FRAMEWORK CORE NÂNG CAO, PHÂN TRANG LINQ & TÍCH HỢP TOÀN DIỆN HỆ THỐNG POS CLIENT - SERVER
 
- 📌 BÁO CÁO KẾT QUẢ THỰC HÀNH BUỔI 6
+# 🚀 BUỔI 6: ENTITY FRAMEWORK CORE NÂNG CAO, PHÂN TRANG LINQ & TÍCH HỢP TOÀN DIỆN HỆ THỐNG POS CLIENT - SERVER
 
-🎯 Mục tiêu bài học
+## 📌 BÁO CÁO KẾT QUẢ THỰC HÀNH BUỔI 6
 
-| # | Kỹ năng | Kết quả đạt được |
+### 🎯 Mục tiêu bài học
+
+| # | 🧠 Kỹ năng | ✅ Kết quả đạt được |
 |---|---------|-----------------|
 | 1 | **Eager Loading** | Dùng `.Include()` để load dữ liệu quan hệ Products ↔ Categories, tránh lỗi N+1 Query |
 | 2 | **Server-side Pagination** | Dùng `.Skip()` + `.Take()` + `.AsNoTracking()` để phân trang tại tầng máy chủ |
@@ -30,9 +29,9 @@ BUỔI 6: ENTITY FRAMEWORK CORE NÂNG CAO, PHÂN TRANG LINQ & TÍCH HỢP TOÀN 
 
 ---
 
-🏗️ Kiến trúc hệ thống
+## 🏗️ Kiến trúc hệ thống
 
-```
+```text
 ┌──────────────────────────────┐        HTTPS / JWT        ┌─────────────────────────────┐
 │  MiniSupermarketWinForms     │ ◄────────────────────────► │  MiniSupermarket.API        │
 │  (.NET 8 WinForms Client)    │    HttpClient + Bearer     │  (ASP.NET Core Web API)     │
@@ -53,9 +52,9 @@ BUỔI 6: ENTITY FRAMEWORK CORE NÂNG CAO, PHÂN TRANG LINQ & TÍCH HỢP TOÀN 
 
 ---
 
-📂 Cấu trúc thư mục
+## 📂 Cấu trúc thư mục
 
-```
+```text
 MiniSupermarket.API/
 ├── MiniSupermarket.API/                   ← Web API Backend
 │   ├── Controllers/
@@ -85,16 +84,17 @@ MiniSupermarket.API/
 
 ---
 
-✅ Bài tập 6.1 — Phân trang Khách hàng (`CustomersController`)
+## ✅ Bài tập 6.1 — Phân trang Khách hàng (`CustomersController`)
 
-File: `MiniSupermarket.API/Controllers/CustomersController.cs`
+📄 **File:** `MiniSupermarket.API/Controllers/CustomersController.cs`
 
-Endpoint
+### 🌐 Endpoint
 
-```
+```http
 GET /api/customers/paged?keyword=nguyen&sortBy=id&pageNumber=1&pageSize=10
 ```
-Code chính
+
+### 💻 Code chính
 
 ```csharp
 // Tìm kiếm gần đúng theo tên hoặc số điện thoại
@@ -113,7 +113,7 @@ var items = await query
     .ToListAsync();
 ```
 
-Response mẫu
+### 📤 Response mẫu
 
 ```json
 {
@@ -129,17 +129,18 @@ Response mẫu
 ```
 
 ---
-✅ Bài tập 6.2 — Phân trang Sản phẩm với Eager Loading (`ProductsController`)
 
-**File:** `MiniSupermarket.API/Controllers/ProductsController.cs`
+## ✅ Bài tập 6.2 — Phân trang Sản phẩm với Eager Loading (`ProductsController`)
 
-Endpoint
+📄 **File:** `MiniSupermarket.API/Controllers/ProductsController.cs`
 
-```
+### 🌐 Endpoint
+
+```http
 GET /api/products/paged?keyword=sua&categoryId=2&pageNumber=1&pageSize=5
 ```
 
-Code chính
+### 💻 Code chính
 
 ```csharp
 // Eager Loading: Load dữ liệu liên kết Category cùng một lần (tránh N+1 Query)
@@ -166,7 +167,7 @@ var items = await query
     .ToListAsync();
 ```
 
- Response mẫu
+### 📤 Response mẫu
 
 ```json
 {
@@ -182,11 +183,11 @@ var items = await query
 
 ---
 
- ✅ Tích hợp WinForms Client ↔ Web API
+## ✅ Tích hợp WinForms Client ↔ Web API
 
-Lớp `ApiClientService` — HttpClient dùng chung + JWT tự động
+### 🔌 Lớp `ApiClientService` — HttpClient dùng chung + JWT tự động
 
-**File:** `MiniSupermarketWinForms/Services/ApiClientService.cs`
+📄 **File:** `MiniSupermarketWinForms/Services/ApiClientService.cs`
 
 ```csharp
 public static class ApiClientService
@@ -206,7 +207,7 @@ public static class ApiClientService
 }
 ```
 
- Gọi API phân trang bất đồng bộ (async/await)
+### ⚡ Gọi API phân trang bất đồng bộ (async/await)
 
 ```csharp
 // FormProductManagement.cs — LoadProductsPagedAsync()
@@ -227,9 +228,9 @@ if (res != null)
 
 ---
 
-🖥️ Màn hình WinForms đã hoàn thiện
+## 🖥️ Màn hình WinForms đã hoàn thiện
 
-| Form | Chức năng | Phân trang | CRUD | JWT |
+| 🪟 Form | ⚙️ Chức năng | 📄 Phân trang | ✏️ CRUD | 🔑 JWT |
 |------|-----------|:----------:|:----:|:---:|
 | `FormLogin` | Đăng nhập, nhận JWT Token | — | — | ✅ |
 | `FormMainShell` | Shell điều hướng, RBAC sidebar | — | — | ✅ |
@@ -242,55 +243,56 @@ if (res != null)
 
 ---
 
- 🔐 Phân quyền theo Vai trò (RBAC)
-| Vai trò | Màn hình có quyền truy cập |
+## 🔐 Phân quyền theo Vai trò (RBAC)
+
+| 🏷️ Vai trò | 🖥️ Màn hình có quyền truy cập |
 |---------|---------------------------|
-| **Admin** | Tất cả màn hình (Sản phẩm, Khách hàng, Danh mục, Báo cáo, Tài khoản) |
-| **Cashier** | POS Bán hàng + Quản lý Khách hàng |
-| **Warehouse** | Quản lý Danh mục + Quản lý Sản phẩm |
+| 🛡️ **Admin** | Tất cả màn hình (Sản phẩm, Khách hàng, Danh mục, Báo cáo, Tài khoản) |
+| 🛒 **Cashier** | POS Bán hàng + Quản lý Khách hàng |
+| 📦 **Warehouse** | Quản lý Danh mục + Quản lý Sản phẩm |
 
 ---
 
- 🚀 Hướng dẫn chạy dự án
+## 🚀 Hướng dẫn chạy dự án
 
- Yêu cầu môi trường
+### 🧰 Yêu cầu môi trường
 
-- .NET 8 SDK
-- SQL Server LocalDB (đi kèm Visual Studio 2022)
+- 🧩 .NET 8 SDK
+- 🗄️ SQL Server LocalDB (đi kèm Visual Studio 2022)
 
-Bước 1 — Tạo cơ sở dữ liệu
+### 1️⃣ Bước 1 — Tạo cơ sở dữ liệu
 
 ```powershell
 cd MiniSupermarket.API
 dotnet ef database update
 ```
 
-Bước 2 — Khởi động Web API Backend
+### 2️⃣ Bước 2 — Khởi động Web API Backend
 
 ```powershell
 dotnet run --project MiniSupermarket.API
 # API chạy tại: https://localhost:7099
 ```
 
-Bước 3 — Khởi động WinForms Client
+### 3️⃣ Bước 3 — Khởi động WinForms Client
 
 ```powershell
 dotnet run --project MiniSupermarketWinForms
 ```
 
-Bước 4 — Tài khoản thử nghiệm
+### 4️⃣ Bước 4 — Tài khoản thử nghiệm
 
-| Tài khoản | Mật khẩu | Vai trò |
+| 👤 Tài khoản | 🔑 Mật khẩu | 🏷️ Vai trò |
 |-----------|----------|---------|
-| `admin` | `123456` | Admin |
-| `cashier1` | `123456` | Cashier |
-| `warehouse1` | `123456` | Warehouse |
+| `admin` | `123456` | 🛡️ Admin |
+| `cashier1` | `123456` | 🛒 Cashier |
+| `warehouse1` | `123456` | 📦 Warehouse |
 
 ---
 
-📡 Danh sách API Endpoints (Buổi 6)
+## 📡 Danh sách API Endpoints (Buổi 6)
 
-| Method | Endpoint | Mô tả | Bài tập |
+| 🔧 Method | 🌐 Endpoint | 📝 Mô tả | 📚 Bài tập |
 |--------|----------|-------|---------|
 | `GET` | `/api/customers/paged` | Phân trang khách hàng, tìm kiếm, sắp xếp | **6.1** |
 | `GET` | `/api/products/paged` | Phân trang sản phẩm + Eager Loading + lọc nhóm | **6.2** |
@@ -300,9 +302,9 @@ Bước 4 — Tài khoản thử nghiệm
 | `PUT` | `/api/users/{id}/toggle-lock` | Khóa / Mở khóa tài khoản | Bổ sung |
 | `PUT` | `/api/users/{id}/reset-password` | Đặt lại mật khẩu | Bổ sung |
 
-Query Parameters chung cho các endpoint phân trang
+### 🔍 Query Parameters chung cho các endpoint phân trang
 
-| Tham số | Kiểu | Mô tả | Mặc định |
+| 🏷️ Tham số | 🧬 Kiểu | 📝 Mô tả | ⚙️ Mặc định |
 |---------|------|-------|----------|
 | `keyword` | string | Từ khóa tìm kiếm gần đúng | _(trống)_ |
 | `pageNumber` | int | Số trang hiện tại | `1` |
@@ -312,9 +314,9 @@ Query Parameters chung cho các endpoint phân trang
 
 ---
 
-📊 Cấu trúc DTO phân trang dùng chung
+## 📊 Cấu trúc DTO phân trang dùng chung
 
-**File:** `MiniSupermarket.API/Models/PagedResponseDto.cs`
+📄 **File:** `MiniSupermarket.API/Models/PagedResponseDto.cs`
 
 ```csharp
 // Generic class dùng cho mọi endpoint phân trang
@@ -330,7 +332,7 @@ public class PagedResult<T>
 
 ---
 
-🔗 Chuỗi kết nối CSDL
+## 🔗 Chuỗi kết nối CSDL
 
 ```json
 "ConnectionStrings": {
@@ -340,9 +342,9 @@ public class PagedResult<T>
 
 ---
 
-📝 Ghi chú kỹ thuật
+## 📝 Ghi chú kỹ thuật
 
-| Kỹ thuật | Lý do sử dụng |
+| 🛠️ Kỹ thuật | 💡 Lý do sử dụng |
 |----------|--------------|
 | `AsNoTracking()` | Bỏ qua Change Tracker của EF Core, giảm đáng kể RAM khi chỉ đọc dữ liệu hiển thị |
 | `HttpClient` Singleton | Một instance dùng chung toàn ứng dụng WinForms, tránh lỗi socket exhaustion |
